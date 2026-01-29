@@ -1,10 +1,11 @@
 """
 Tests for rate limiting functionality.
 """
+import time
+from unittest.mock import MagicMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
-import time
 
 
 @pytest.fixture
@@ -72,7 +73,6 @@ def test_api_key_allows_higher_limit(client, mock_redis):
 
     This test uses mocking to verify the logic without hitting real limits.
     """
-    from app.core.security import hash_api_key
 
     # Mock API key validation
     test_api_key = "test_key_12345"
@@ -112,8 +112,9 @@ def test_invalid_api_key_returns_401(client):
 
 def test_rate_limit_key_function():
     """Test the rate limit key function logic."""
-    from app.core.rate_limit import get_rate_limit_key
     from fastapi import Request
+
+    from app.core.rate_limit import get_rate_limit_key
 
     # Mock request with API key
     mock_request_with_key = MagicMock(spec=Request)

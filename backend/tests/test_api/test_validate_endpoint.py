@@ -5,7 +5,6 @@ Tests single molecule validation API.
 """
 import pytest
 
-
 # Uses shared 'client' fixture from conftest.py
 
 

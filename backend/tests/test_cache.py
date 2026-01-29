@@ -3,16 +3,17 @@ Tests for validation caching functionality.
 
 Tests the Redis-based caching layer for validation results.
 """
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 import json
+from unittest.mock import AsyncMock
+
+import pytest
 
 from app.core.cache import (
-    validation_cache_key,
-    get_cached_validation,
-    set_cached_validation,
-    invalidate_cached_validation,
     get_cache_stats,
+    get_cached_validation,
+    invalidate_cached_validation,
+    set_cached_validation,
+    validation_cache_key,
 )
 
 

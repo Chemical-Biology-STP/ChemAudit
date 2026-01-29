@@ -4,10 +4,9 @@ Tests for batch file parsing (SDF and CSV).
 import pytest
 
 from app.services.batch.file_parser import (
-    parse_sdf,
-    parse_csv,
     detect_csv_columns,
-    MoleculeData,
+    parse_csv,
+    parse_sdf,
 )
 
 

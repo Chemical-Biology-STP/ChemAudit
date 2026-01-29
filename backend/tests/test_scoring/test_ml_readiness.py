@@ -7,9 +7,9 @@ import pytest
 from rdkit import Chem
 
 from app.services.scoring.ml_readiness import (
+    MLReadinessResult,
     MLReadinessScorer,
     calculate_ml_readiness,
-    MLReadinessResult,
 )
 
 

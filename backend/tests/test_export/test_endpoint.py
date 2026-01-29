@@ -5,11 +5,10 @@ Tests export API endpoint functionality.
 """
 import json
 import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
-from fastapi import FastAPI
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
 from app.main import app
 

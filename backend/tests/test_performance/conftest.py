@@ -1,10 +1,10 @@
 """
 Pytest fixtures for performance tests.
 """
-import pytest
 from typing import List, Tuple
-from rdkit import Chem
 
+import pytest
+from rdkit import Chem
 
 # Test molecule set covering diverse complexities
 TEST_MOLECULES: List[Tuple[str, str]] = [

@@ -1,15 +1,14 @@
 """
 Tests for representation consistency validation checks.
 """
-import pytest
 from rdkit import Chem
 
+from app.schemas.common import Severity
 from app.services.validation.checks.representation import (
-    SmilesRoundtripCheck,
     InchiGenerationCheck,
     InchiRoundtripCheck,
+    SmilesRoundtripCheck,
 )
-from app.schemas.common import Severity
 
 
 class TestSmilesRoundtripCheck:

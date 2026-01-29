@@ -1,15 +1,14 @@
 """
 Tests for stereochemistry validation checks.
 """
-import pytest
 from rdkit import Chem
 
-from app.services.validation.checks.stereo import (
-    UndefinedStereoCentersCheck,
-    UndefinedDoubleBondStereoCheck,
-    ConflictingStereoCheck,
-)
 from app.schemas.common import Severity
+from app.services.validation.checks.stereo import (
+    ConflictingStereoCheck,
+    UndefinedDoubleBondStereoCheck,
+    UndefinedStereoCentersCheck,
+)
 
 
 class TestUndefinedStereoCentersCheck:

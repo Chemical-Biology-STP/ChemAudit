@@ -7,9 +7,9 @@ import pytest
 from rdkit import Chem
 
 from app.services.scoring.np_likeness import (
+    NPLikenessResult,
     NPLikenessScorer,
     calculate_np_likeness,
-    NPLikenessResult,
 )
 
 

@@ -17,7 +17,6 @@ from rdkit import Chem
 from app.services.parser import parse_molecule
 from app.services.validation.engine import validation_engine
 
-
 # Load reference data
 REFERENCE_DATA_PATH = Path(__file__).parent / "reference_data.json"
 

@@ -109,8 +109,7 @@ export function SingleValidationPage() {
   const [highlightedAtoms, setHighlightedAtoms] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>('validate');
   const { validate, result, error, isLoading, reset } = useValidation();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [shareToastVisible, setShareToastVisible] = useState(false);
+  const [_shareToastVisible, setShareToastVisible] = useState(false);
   const { recent, addRecent, removeRecent, clearRecent } = useRecentMolecules();
 
   // Load molecule from URL on mount
@@ -1316,7 +1315,7 @@ export function SingleValidationPage() {
 
       {/* Share URL Toast */}
       <AnimatePresence>
-        {shareToastVisible && (
+        {_shareToastVisible && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}

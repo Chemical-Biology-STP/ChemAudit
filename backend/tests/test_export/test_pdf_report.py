@@ -9,9 +9,8 @@ from io import BytesIO
 import pytest
 from PyPDF2 import PdfReader
 
-from app.services.export.base import ExportFormat, ExporterFactory
+from app.services.export.base import ExporterFactory, ExportFormat
 from app.services.export.pdf_report import PDFReportGenerator
-
 
 # Sample test data
 SAMPLE_RESULTS = [

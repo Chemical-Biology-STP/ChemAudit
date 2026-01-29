@@ -1,11 +1,12 @@
 """
 Tests for PubChem integration client.
 """
-import pytest
 from unittest.mock import AsyncMock, patch
 
-from app.services.integrations.pubchem import PubChemClient, get_compound_info
+import pytest
+
 from app.schemas.integrations import PubChemRequest
+from app.services.integrations.pubchem import PubChemClient, get_compound_info
 
 
 class TestPubChemClient:

@@ -3,11 +3,11 @@ Tests for batch API endpoints.
 
 These tests use mocked Celery tasks to avoid requiring Redis.
 """
-import io
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from httpx import AsyncClient, ASGITransport
+import pytest
+from httpx import ASGITransport, AsyncClient
+
 from app.main import app
 
 

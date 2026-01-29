@@ -3,10 +3,9 @@ Tests for Scaffold Extraction
 
 Tests the extract_scaffold function for various molecule types.
 """
-import pytest
 from rdkit import Chem
 
-from app.services.scoring.scaffold import extract_scaffold, ScaffoldResult
+from app.services.scoring.scaffold import ScaffoldResult, extract_scaffold
 
 
 class TestScaffoldExtraction:

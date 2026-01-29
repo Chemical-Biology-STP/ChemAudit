@@ -3,8 +3,7 @@ Molecule Parser Tests
 
 Tests defensive sanitization pattern and format detection.
 """
-import pytest
-from app.services.parser import parse_molecule, detect_format, ParseResult
+from app.services.parser import detect_format, parse_molecule
 from app.services.parser.molecule_parser import MoleculeFormat
 
 

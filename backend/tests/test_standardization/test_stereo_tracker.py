@@ -6,15 +6,14 @@ Tests detection and comparison of stereocenters before/after standardization.
 import pytest
 from rdkit import Chem
 
+from app.services.standardization.chembl_pipeline import (
+    StandardizationOptions,
+    StandardizationPipeline,
+)
 from app.services.standardization.stereo_tracker import (
+    StereoInfo,
     StereoTracker,
     track_stereocenters,
-    StereoInfo,
-    StereoComparison,
-)
-from app.services.standardization.chembl_pipeline import (
-    StandardizationPipeline,
-    StandardizationOptions,
 )
 
 

@@ -7,7 +7,6 @@ from rdkit import Chem
 from app.services.alerts.filter_catalog import (
     get_filter_catalog,
     list_available_catalogs,
-    AVAILABLE_CATALOGS,
 )
 
 

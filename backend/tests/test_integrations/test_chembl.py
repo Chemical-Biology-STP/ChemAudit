@@ -1,11 +1,12 @@
 """
 Tests for ChEMBL integration client.
 """
-import pytest
 from unittest.mock import AsyncMock, patch
 
-from app.services.integrations.chembl import ChEMBLClient, get_bioactivity
+import pytest
+
 from app.schemas.integrations import ChEMBLRequest
+from app.services.integrations.chembl import ChEMBLClient, get_bioactivity
 
 
 class TestChEMBLClient:

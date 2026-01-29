@@ -10,8 +10,8 @@ import pytest
 from rdkit import Chem
 
 from app.services.standardization.chembl_pipeline import (
-    StandardizationPipeline,
     StandardizationOptions,
+    StandardizationPipeline,
     standardize_molecule,
 )
 

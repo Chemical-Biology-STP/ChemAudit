@@ -1,11 +1,12 @@
 """
 Tests for COCONUT integration client.
 """
-import pytest
 from unittest.mock import AsyncMock, patch
 
-from app.services.integrations.coconut import COCONUTClient, lookup_natural_product
+import pytest
+
 from app.schemas.integrations import COCONUTRequest
+from app.services.integrations.coconut import COCONUTClient, lookup_natural_product
 
 
 class TestCOCONUTClient:

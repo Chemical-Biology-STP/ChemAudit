@@ -4,20 +4,15 @@ Unit Tests for Export Services
 Tests each exporter individually.
 """
 import json
-from io import BytesIO
-
-import pytest
-from rdkit import Chem
 
 from app.services.export import (
     CSVExporter,
     ExcelExporter,
-    SDFExporter,
-    JSONExporter,
     ExporterFactory,
     ExportFormat,
+    JSONExporter,
+    SDFExporter,
 )
-
 
 # Sample test data
 SAMPLE_RESULTS = [

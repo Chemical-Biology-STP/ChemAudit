@@ -3,8 +3,6 @@ Tests for batch processing tasks.
 
 Note: These tests mock Celery to avoid requiring a running Redis instance.
 """
-import pytest
-from unittest.mock import patch, MagicMock
 
 from app.services.batch.tasks import _process_single_molecule
 

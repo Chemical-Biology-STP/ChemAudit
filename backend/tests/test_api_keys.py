@@ -1,10 +1,10 @@
 """
 Tests for API key management functionality.
 """
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, AsyncMock
-import secrets
 
 
 @pytest.fixture

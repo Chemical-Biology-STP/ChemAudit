@@ -4,7 +4,8 @@ Tests for standardization API endpoint.
 Tests the POST /api/v1/standardize endpoint.
 """
 import pytest
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
+
 from app.main import app
 
 

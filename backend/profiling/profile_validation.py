@@ -15,21 +15,19 @@ import argparse
 import sys
 import time
 from pathlib import Path
-from typing import List, Tuple
 from statistics import mean, median, stdev
+from typing import List, Tuple
 
 # Add backend to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from rdkit import Chem
 
-from app.services.parser.molecule_parser import parse_molecule
-from app.services.validation.engine import validation_engine
-from app.services.alerts.filter_catalog import get_filter_catalog
 from app.services.alerts.alert_manager import alert_manager
+from app.services.alerts.filter_catalog import get_filter_catalog
+from app.services.parser.molecule_parser import parse_molecule
 from app.services.scoring.ml_readiness import calculate_ml_readiness
 from app.services.standardization.chembl_pipeline import standardize_molecule
-
+from app.services.validation.engine import validation_engine
 
 # Diverse test set covering various molecule types and complexities
 TEST_MOLECULES: List[Tuple[str, str]] = [
@@ -85,17 +83,17 @@ def profile_single_validation(smiles: str, name: str) -> dict:
 
     # Alert screening
     start = time.perf_counter()
-    alerts = alert_manager.screen(mol, catalogs=["PAINS", "BRENK"])
+    _ = alert_manager.screen(mol, catalogs=["PAINS", "BRENK"])
     timings["alerts_ms"] = (time.perf_counter() - start) * 1000
 
     # ML-readiness scoring
     start = time.perf_counter()
-    ml_score = calculate_ml_readiness(mol)
+    _ = calculate_ml_readiness(mol)
     timings["ml_scoring_ms"] = (time.perf_counter() - start) * 1000
 
     # Standardization
     start = time.perf_counter()
-    std_result = standardize_molecule(mol)
+    _ = standardize_molecule(mol)
     timings["standardization_ms"] = (time.perf_counter() - start) * 1000
 
     # Total

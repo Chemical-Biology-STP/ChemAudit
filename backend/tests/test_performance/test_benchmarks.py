@@ -13,19 +13,16 @@ Performance Targets:
 
 These benchmarks ensure performance doesn't regress across releases.
 """
-import pytest
-from typing import List, Tuple
-from statistics import mean
 
+import pytest
 from rdkit import Chem
 
-from app.services.parser import parse_molecule
-from app.services.validation.engine import validation_engine
 from app.services.alerts.alert_manager import alert_manager
 from app.services.alerts.filter_catalog import get_filter_catalog
+from app.services.parser import parse_molecule
 from app.services.scoring.ml_readiness import calculate_ml_readiness
 from app.services.standardization.chembl_pipeline import standardize_molecule
-
+from app.services.validation.engine import validation_engine
 
 # Performance targets documented for automated CI checks
 PERF_TARGETS = {
@@ -221,7 +218,7 @@ class TestAlertScreeningPerformance:
         def screen():
             return alert_manager.screen(mol, catalogs=["PAINS", "BRENK"])
 
-        result = benchmark(screen)
+        benchmark(screen)
 
         # Check performance (only when benchmark stats available)
         if benchmark.stats and benchmark.stats.stats:
@@ -363,7 +360,7 @@ class TestStandardizationPerformance:
         def standardize():
             return standardize_molecule(mol)
 
-        result = benchmark(standardize)
+        benchmark(standardize)
 
         # Check performance (only when benchmark stats available)
         if benchmark.stats and benchmark.stats.stats:
@@ -386,7 +383,7 @@ class TestStandardizationPerformance:
         def standardize():
             return standardize_molecule(mol)
 
-        result = benchmark(standardize)
+        benchmark(standardize)
         # Standardization may fail for some molecules, that's OK for performance test
 
 
