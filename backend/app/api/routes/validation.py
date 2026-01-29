@@ -9,9 +9,8 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from rdkit import Chem
-from rdkit.Chem import Descriptors
+from rdkit.Chem import Descriptors, rdMolDescriptors
 from rdkit.Chem import inchi as rdkit_inchi
-from rdkit.Chem import rdMolDescriptors
 from redis.asyncio import Redis
 
 from app.core.cache import (

@@ -22,17 +22,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install linters
-        run: pip install black flake8 isort
+      - name: Install ruff
+        run: pip install ruff
 
-      - name: Check formatting (black)
-        run: black --check app/
-
-      - name: Check import sorting (isort)
-        run: isort --check-only --profile black app/
-
-      - name: Lint (flake8)
-        run: flake8 app/ --max-line-length=100 --ignore=E501,W503,E203
+      - name: Lint and check formatting (ruff)
+        run: ruff check .
 
   frontend-lint:
     name: Frontend (TypeScript)
