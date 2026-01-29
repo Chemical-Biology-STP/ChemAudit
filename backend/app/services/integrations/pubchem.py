@@ -8,8 +8,9 @@ https://pubchem.ncbi.nlm.nih.gov/
 This client provides compound lookup and cross-reference functionality.
 """
 
+from typing import List, Optional
+
 import httpx
-from typing import Optional, List
 from rdkit import Chem
 
 from app.core.config import settings

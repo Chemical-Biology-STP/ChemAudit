@@ -9,7 +9,6 @@ from enum import Enum
 from io import BytesIO
 from typing import Any, Dict, List, Tuple
 
-
 # Alert catalog names used across exporters
 ALERT_CATALOGS = ["pains", "brenk", "nih", "glaxo"]
 

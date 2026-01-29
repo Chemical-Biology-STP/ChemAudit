@@ -7,9 +7,9 @@ Uses moving average for ETA calculation.
 
 import json
 import time
-from dataclasses import dataclass, asdict
-from typing import Optional
 from collections import deque
+from dataclasses import asdict, dataclass
+from typing import Optional
 
 import redis
 

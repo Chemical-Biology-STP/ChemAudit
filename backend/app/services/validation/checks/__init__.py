@@ -6,21 +6,21 @@ Collection of chemical structure validation checks.
 
 from .base import BaseCheck, CheckResult
 from .basic import (
+    AromaticityCheck,
+    ConnectivityCheck,
     ParsabilityCheck,
     SanitizationCheck,
     ValenceCheck,
-    AromaticityCheck,
-    ConnectivityCheck,
-)
-from .stereo import (
-    UndefinedStereoCentersCheck,
-    UndefinedDoubleBondStereoCheck,
-    ConflictingStereoCheck,
 )
 from .representation import (
-    SmilesRoundtripCheck,
     InchiGenerationCheck,
     InchiRoundtripCheck,
+    SmilesRoundtripCheck,
+)
+from .stereo import (
+    ConflictingStereoCheck,
+    UndefinedDoubleBondStereoCheck,
+    UndefinedStereoCentersCheck,
 )
 
 __all__ = [

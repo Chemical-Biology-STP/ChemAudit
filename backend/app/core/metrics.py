@@ -28,7 +28,6 @@ from prometheus_client import Counter, Gauge, Histogram, Info
 
 from app.core.config import settings
 
-
 # Application info metric
 APP_INFO = Info(
     "chemvault",

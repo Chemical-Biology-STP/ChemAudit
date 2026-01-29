@@ -6,22 +6,18 @@ Uses chord pattern: process_molecule_chunk tasks -> aggregate_batch_results.
 """
 
 import time
-from typing import List, Dict, Any
 from dataclasses import asdict
+from typing import Any, Dict, List
 
 from celery import chord, group
 from rdkit import Chem
 
 from app.celery_app import celery_app
-from app.services.validation.engine import validation_engine
 from app.services.alerts import alert_manager
-from app.services.scoring.ml_readiness import calculate_ml_readiness
 from app.services.batch.progress_tracker import progress_tracker
-from app.services.batch.result_aggregator import (
-    compute_statistics,
-    result_storage,
-)
-
+from app.services.batch.result_aggregator import compute_statistics, result_storage
+from app.services.scoring.ml_readiness import calculate_ml_readiness
+from app.services.validation.engine import validation_engine
 
 CHUNK_SIZE = 100  # Process 100 molecules per chunk for progress updates
 
@@ -235,7 +231,7 @@ def process_batch_job(job_id: str, molecules: List[Dict[str, Any]]) -> str:
     # Split into chunks
     chunks = []
     for i in range(0, total_molecules, CHUNK_SIZE):
-        chunk = molecules[i:i + CHUNK_SIZE]
+        chunk = molecules[i : i + CHUNK_SIZE]
         # Convert MoleculeData objects to dicts if needed
         chunk_dicts = []
         for m in chunk:

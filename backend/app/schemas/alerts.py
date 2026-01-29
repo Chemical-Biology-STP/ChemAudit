@@ -4,9 +4,10 @@ Alert Screening Schemas
 Pydantic schemas for structural alert screening requests and responses.
 """
 
-from pydantic import BaseModel, Field, field_validator
-from typing import List, Optional, Dict
 from enum import Enum
+from typing import Dict, List, Optional
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class AlertSeverity(str, Enum):

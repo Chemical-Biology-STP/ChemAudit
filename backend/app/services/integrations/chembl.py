@@ -8,12 +8,13 @@ https://www.ebi.ac.uk/chembl/
 This client provides bioactivity data lookup functionality.
 """
 
+from typing import List, Optional
+
 import httpx
-from typing import Optional, List
 from rdkit import Chem
 
 from app.core.config import settings
-from app.schemas.integrations import ChEMBLRequest, ChEMBLResult, BioactivityData
+from app.schemas.integrations import BioactivityData, ChEMBLRequest, ChEMBLResult
 
 
 class ChEMBLClient:

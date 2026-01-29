@@ -7,8 +7,9 @@ https://coconut.naturalproducts.net/
 This client uses COCONUT API v2 which requires authentication.
 """
 
-import httpx
 from typing import Optional
+
+import httpx
 from rdkit import Chem
 
 from app.core.config import settings

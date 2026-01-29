@@ -5,8 +5,9 @@ Provides system status, version information, and RDKit availability.
 """
 
 from fastapi import APIRouter
-from app.schemas.common import HealthResponse
+
 from app.core.config import settings
+from app.schemas.common import HealthResponse
 
 router = APIRouter()
 

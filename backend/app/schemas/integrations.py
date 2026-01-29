@@ -4,8 +4,9 @@ Schemas for external integration requests and responses.
 Covers COCONUT, PubChem, and ChEMBL integrations.
 """
 
+from typing import List, Optional
+
 from pydantic import BaseModel, Field
-from typing import Optional, List
 
 
 # COCONUT Natural Products Database

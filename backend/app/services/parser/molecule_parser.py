@@ -6,8 +6,8 @@ This prevents silent failures and allows precise error detection.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
 from rdkit import Chem
 

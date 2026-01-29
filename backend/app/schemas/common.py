@@ -5,8 +5,9 @@ Includes severity levels, error responses, and health check responses.
 """
 
 from enum import Enum
+from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
 
 
 class Severity(str, Enum):

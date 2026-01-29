@@ -12,10 +12,10 @@ Score interpretation:
 Typical range: -5 to +5 (most molecules fall within -3 to +3)
 """
 
-from dataclasses import dataclass, field
-from functools import lru_cache
 import gzip
 import pickle
+from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 

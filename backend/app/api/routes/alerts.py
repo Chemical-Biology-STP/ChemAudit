@@ -8,27 +8,27 @@ IMPORTANT: Alerts are warnings for investigation, not automatic rejections.
 87 FDA-approved drugs contain PAINS patterns.
 """
 
-from fastapi import APIRouter, HTTPException, Request, Depends
-from rdkit import Chem
-from rdkit.Chem import rdMolDescriptors
 import time
 from typing import Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Request
+from rdkit import Chem
+from rdkit.Chem import rdMolDescriptors
+
+from app.core.rate_limit import get_rate_limit_key, limiter
+from app.core.security import get_api_key
 from app.schemas.alerts import (
+    AlertResultSchema,
     AlertScreenRequest,
     AlertScreenResponse,
-    AlertResultSchema,
     AlertSeverity,
-    MoleculeInfoSchema,
-    CatalogListResponse,
     CatalogInfoSchema,
+    CatalogListResponse,
+    MoleculeInfoSchema,
 )
-from app.services.parser.molecule_parser import parse_molecule, MoleculeFormat
 from app.services.alerts.alert_manager import alert_manager
 from app.services.alerts.filter_catalog import AVAILABLE_CATALOGS
-from app.core.rate_limit import limiter, get_rate_limit_key
-from app.core.security import get_api_key
-
+from app.services.parser.molecule_parser import MoleculeFormat, parse_molecule
 
 router = APIRouter()
 

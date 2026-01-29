@@ -11,8 +11,8 @@ IMPORTANT: Structural alerts are warnings, not automatic rejections.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Optional
 from enum import Enum
+from typing import List, Optional
 
 from rdkit import Chem
 

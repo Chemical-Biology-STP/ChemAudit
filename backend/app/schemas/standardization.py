@@ -4,8 +4,10 @@ Standardization Schemas
 Pydantic schemas for standardization requests and responses.
 """
 
-from pydantic import BaseModel, Field
 from typing import List, Optional
+
+from pydantic import BaseModel, Field
+
 from app.schemas.validation import MoleculeInfo
 
 

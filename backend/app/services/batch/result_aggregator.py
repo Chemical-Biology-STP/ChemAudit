@@ -5,9 +5,9 @@ Computes statistics from batch processing results.
 """
 
 import json
-from dataclasses import dataclass, asdict, field
-from typing import List, Dict, Any, Optional
 from collections import Counter
+from dataclasses import asdict, dataclass, field
+from typing import Any, Dict, List, Optional
 
 import redis
 

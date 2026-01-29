@@ -7,6 +7,7 @@ Checks for issues with molecular representation conversions (SMILES/InChI roundt
 from rdkit import Chem
 
 from app.schemas.common import Severity
+
 from ..registry import CheckRegistry
 from .base import BaseCheck, CheckResult
 

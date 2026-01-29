@@ -4,8 +4,10 @@ Validation Schemas
 Pydantic schemas for validation requests and responses.
 """
 
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field, field_validator
-from typing import List, Optional, Dict, Any
+
 from app.schemas.common import Severity
 
 

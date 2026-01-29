@@ -12,14 +12,14 @@ from app.services.standardization.chembl_pipeline import (
     StandardizationPipeline,
     standardize_molecule,
 )
+from app.services.standardization.comparison import (
+    StructureComparison,
+    compare_structures,
+)
 from app.services.standardization.stereo_tracker import (
+    StereoInfo,
     StereoTracker,
     track_stereocenters,
-    StereoInfo,
-)
-from app.services.standardization.comparison import (
-    compare_structures,
-    StructureComparison,
 )
 
 __all__ = [

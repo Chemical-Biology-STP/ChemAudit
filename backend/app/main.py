@@ -3,18 +3,12 @@ ChemVault API - Chemical Structure Validation Suite
 """
 
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
-from app.core.config import settings
-from app.core.exceptions import (
-    ChemVaultException,
-    chemvault_exception_handler,
-    generic_exception_handler,
-)
-from app.core.rate_limit import limiter, rate_limit_exceeded_handler
 from app.api.routes import (
     alerts,
     api_keys,
@@ -27,6 +21,13 @@ from app.api.routes import (
     standardization,
     validation,
 )
+from app.core.config import settings
+from app.core.exceptions import (
+    ChemVaultException,
+    chemvault_exception_handler,
+    generic_exception_handler,
+)
+from app.core.rate_limit import limiter, rate_limit_exceeded_handler
 from app.websockets import manager
 
 # Conditional Prometheus imports

@@ -4,25 +4,25 @@ External Integrations API Routes
 Endpoints for COCONUT, PubChem, and ChEMBL integrations.
 """
 
-from fastapi import APIRouter, Request, Depends
 from typing import Optional
 
+from fastapi import APIRouter, Depends, Request
+
+from app.core.rate_limit import get_rate_limit_key, limiter
+from app.core.security import get_api_key
 from app.schemas.integrations import (
+    ChEMBLRequest,
+    ChEMBLResult,
     COCONUTRequest,
     COCONUTResult,
     PubChemRequest,
     PubChemResult,
-    ChEMBLRequest,
-    ChEMBLResult,
 )
 from app.services.integrations import (
-    lookup_natural_product,
-    get_compound_info,
     get_bioactivity,
+    get_compound_info,
+    lookup_natural_product,
 )
-from app.core.rate_limit import limiter, get_rate_limit_key
-from app.core.security import get_api_key
-
 
 router = APIRouter()
 

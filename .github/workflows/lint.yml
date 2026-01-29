@@ -32,7 +32,7 @@ jobs:
         run: isort --check-only --profile black app/
 
       - name: Lint (flake8)
-        run: flake8 app/ --max-line-length=100 --ignore=E501,W503
+        run: flake8 app/ --max-line-length=100 --ignore=E501,W503,E203
 
   frontend-lint:
     name: Frontend (TypeScript)

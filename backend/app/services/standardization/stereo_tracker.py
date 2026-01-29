@@ -9,7 +9,8 @@ Always warn users when defined stereocenters are lost.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
+
 from rdkit import Chem
 
 

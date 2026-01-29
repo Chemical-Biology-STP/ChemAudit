@@ -17,7 +17,7 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 from weasyprint import HTML
 
-from app.services.export.base import BaseExporter, ExportFormat, ExporterFactory
+from app.services.export.base import BaseExporter, ExporterFactory, ExportFormat
 
 
 def _extract_validation_scores(results: List[Dict[str, Any]]) -> List[int]:

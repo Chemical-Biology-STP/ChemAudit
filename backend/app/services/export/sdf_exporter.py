@@ -10,7 +10,7 @@ from typing import Any, Dict, List
 
 from rdkit import Chem
 
-from .base import BaseExporter, ExportFormat, ExporterFactory, extract_alert_names
+from .base import BaseExporter, ExporterFactory, ExportFormat, extract_alert_names
 
 logger = logging.getLogger(__name__)
 

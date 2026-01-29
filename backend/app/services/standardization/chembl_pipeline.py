@@ -12,20 +12,17 @@ opt-in when they understand the implications.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
+
+from chembl_structure_pipeline import checker, get_parent_mol, standardizer
 from rdkit import Chem
 from rdkit.Chem.MolStandardize import rdMolStandardize
 
-from chembl_structure_pipeline import standardizer, checker, get_parent_mol
-
-from app.services.standardization.stereo_tracker import (
-    StereoTracker,
-    StereoComparison,
-)
 from app.services.standardization.comparison import (
-    compare_structures,
     StructureComparison,
+    compare_structures,
 )
+from app.services.standardization.stereo_tracker import StereoComparison, StereoTracker
 
 
 @dataclass

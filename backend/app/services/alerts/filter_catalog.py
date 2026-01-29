@@ -16,15 +16,11 @@ Note: Structural alerts are warnings, not automatic rejections.
 87 FDA-approved drugs contain PAINS patterns.
 """
 
+from dataclasses import dataclass
 from functools import lru_cache
 from typing import Dict
-from dataclasses import dataclass
 
-from rdkit.Chem.FilterCatalog import (
-    FilterCatalog,
-    FilterCatalogParams,
-)
-
+from rdkit.Chem.FilterCatalog import FilterCatalog, FilterCatalogParams
 
 # Available catalog types and their descriptions
 AVAILABLE_CATALOGS: Dict[str, Dict[str, str]] = {

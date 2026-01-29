@@ -4,30 +4,30 @@ Scoring API Routes
 Endpoints for molecule scoring including ML-readiness, NP-likeness, and scaffold extraction.
 """
 
-from fastapi import APIRouter, HTTPException, Request, Depends
-from rdkit import Chem
-from rdkit.Chem import Descriptors, rdMolDescriptors
 import time
 from typing import Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Request
+from rdkit import Chem
+from rdkit.Chem import Descriptors, rdMolDescriptors
+
+from app.core.rate_limit import get_rate_limit_key, limiter
+from app.core.security import get_api_key
 from app.schemas.scoring import (
-    ScoringRequest,
-    ScoringResponse,
-    MoleculeInfoSchema,
-    MLReadinessResultSchema,
     MLReadinessBreakdownSchema,
+    MLReadinessResultSchema,
+    MoleculeInfoSchema,
     NPLikenessResultSchema,
     ScaffoldResultSchema,
+    ScoringRequest,
+    ScoringResponse,
 )
-from app.services.parser.molecule_parser import parse_molecule, MoleculeFormat
+from app.services.parser.molecule_parser import MoleculeFormat, parse_molecule
 from app.services.scoring import (
     calculate_ml_readiness,
     calculate_np_likeness,
     extract_scaffold,
 )
-from app.core.rate_limit import limiter, get_rate_limit_key
-from app.core.security import get_api_key
-
 
 router = APIRouter()
 

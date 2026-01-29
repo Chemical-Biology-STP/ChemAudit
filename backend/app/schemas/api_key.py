@@ -2,8 +2,9 @@
 API Key schemas for request/response validation.
 """
 
-from pydantic import BaseModel, Field
 from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class APIKeyCreate(BaseModel):

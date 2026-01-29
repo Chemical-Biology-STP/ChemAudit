@@ -5,10 +5,12 @@ Compares original and standardized structures to summarize changes.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import List, Optional
+
 from rdkit import Chem
-from rdkit.Chem import Descriptors, rdMolDescriptors
+from rdkit.Chem import Descriptors
 from rdkit.Chem import inchi as rdkit_inchi
+from rdkit.Chem import rdMolDescriptors
 
 
 @dataclass

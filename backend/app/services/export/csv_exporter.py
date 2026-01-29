@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 
 import pandas as pd
 
-from .base import BaseExporter, count_alerts, ExportFormat, ExporterFactory
+from .base import BaseExporter, ExporterFactory, ExportFormat, count_alerts
 
 
 class CSVExporter(BaseExporter):

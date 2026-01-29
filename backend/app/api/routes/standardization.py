@@ -4,28 +4,28 @@ Standardization API Routes
 Endpoints for molecule standardization using ChEMBL-compatible pipeline.
 """
 
-from fastapi import APIRouter, HTTPException, Request, Depends
 import time
 from typing import Optional
 
+from fastapi import APIRouter, Depends, HTTPException, Request
+
+from app.api.routes.validation import extract_molecule_info
+from app.core.rate_limit import get_rate_limit_key, limiter
+from app.core.security import get_api_key
 from app.schemas.standardization import (
-    StandardizeRequest,
-    StandardizeResponse,
+    CheckerIssue,
     StandardizationResult,
     StandardizationStep,
+    StandardizeRequest,
+    StandardizeResponse,
     StereoComparison,
     StructureComparisonSchema,
-    CheckerIssue,
 )
-from app.services.parser.molecule_parser import parse_molecule, MoleculeFormat
+from app.services.parser.molecule_parser import MoleculeFormat, parse_molecule
 from app.services.standardization.chembl_pipeline import (
-    StandardizationPipeline,
     StandardizationOptions,
+    StandardizationPipeline,
 )
-from app.api.routes.validation import extract_molecule_info
-from app.core.rate_limit import limiter, get_rate_limit_key
-from app.core.security import get_api_key
-
 
 router = APIRouter()
 

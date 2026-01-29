@@ -10,14 +10,13 @@ from typing import Dict, List, Optional
 
 from rdkit import Chem
 
-from app.schemas.common import Severity
-from app.services.validation.checks.base import BaseCheck, CheckResult
-from app.services.validation.registry import CheckRegistry
-
 # Import checks to trigger registration
 import app.services.validation.checks.basic  # noqa: F401
 import app.services.validation.checks.representation  # noqa: F401
 import app.services.validation.checks.stereo  # noqa: F401
+from app.schemas.common import Severity
+from app.services.validation.checks.base import BaseCheck, CheckResult
+from app.services.validation.registry import CheckRegistry
 
 
 class ValidationEngine:
