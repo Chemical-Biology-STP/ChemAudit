@@ -49,6 +49,7 @@ export function useTheme() {
   // Initialize theme on mount
   useEffect(() => {
     applyTheme(theme);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Listen for system theme changes

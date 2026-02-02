@@ -65,6 +65,9 @@ export function useMolecule(
   // CRITICAL: Track mol reference for cleanup (PITFALL 2)
   const molRef = useRef<RDKitMol | null>(null);
 
+  // Serialize highlightAtoms for dependency comparison
+  const highlightAtomsKey = JSON.stringify(highlightAtoms);
+
   useEffect(() => {
     // If no SMILES, clear state
     if (!smiles || smiles.trim() === '') {
@@ -161,7 +164,7 @@ export function useMolecule(
         molRef.current = null;
       }
     };
-  }, [smiles, width, height, JSON.stringify(highlightAtoms), showCIP]);
+  }, [smiles, width, height, highlightAtoms, highlightAtomsKey, showCIP]);
 
   return {
     svg,

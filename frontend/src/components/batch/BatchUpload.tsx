@@ -45,7 +45,6 @@ export function BatchUpload({
   const [csvColumns, setCsvColumns] = useState<CSVColumnsResponse | null>(null);
   const [selectedSmilesColumn, setSelectedSmilesColumn] = useState<string>('');
   const [selectedNameColumn, setSelectedNameColumn] = useState<string>('');
-  const [_showColumnHelp, _setShowColumnHelp] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +68,7 @@ export function BatchUpload({
     e.stopPropagation();
   }, []);
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = useCallback((file: File): string | null => {
     const name = file.name.toLowerCase();
     if (!name.endsWith('.sdf') && !isTextFormat(name)) {
       return 'Invalid file type. Please upload an SDF, CSV, TSV, or TXT file.';
@@ -78,9 +77,9 @@ export function BatchUpload({
       return `File too large. Maximum size is ${limits.max_file_size_mb}MB.`;
     }
     return null;
-  };
+  }, [limits.max_file_size_bytes, limits.max_file_size_mb]);
 
-  const processFile = async (file: File) => {
+  const processFile = useCallback(async (file: File) => {
     const error = validateFile(file);
     if (error) {
       onUploadError(error);
@@ -109,7 +108,7 @@ export function BatchUpload({
         setIsAnalyzing(false);
       }
     }
-  };
+  }, [onUploadError, validateFile]);
 
   const handleDrop = useCallback(
     async (e: React.DragEvent) => {
@@ -124,7 +123,7 @@ export function BatchUpload({
         await processFile(files[0]);
       }
     },
-    [disabled, isUploading, isAnalyzing, isExtracting]
+    [disabled, isUploading, isAnalyzing, isExtracting, processFile]
   );
 
   const handleFileSelect = useCallback(
@@ -134,7 +133,7 @@ export function BatchUpload({
         await processFile(files[0]);
       }
     },
-    []
+    [processFile]
   );
 
   const handleUpload = async () => {
@@ -204,7 +203,6 @@ export function BatchUpload({
     setCsvColumns(null);
     setSelectedSmilesColumn('');
     setSelectedNameColumn('');
-    _setShowColumnHelp(false);
     setIsExtracting(false);
     setUploadProgress(0);
     if (fileInputRef.current) {

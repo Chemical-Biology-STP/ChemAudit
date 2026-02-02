@@ -126,6 +126,7 @@ export function SingleValidationPage() {
         });
       }, 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run on mount
 
   // Add to recent molecules after successful validation
