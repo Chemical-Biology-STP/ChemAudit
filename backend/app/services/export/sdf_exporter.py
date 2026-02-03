@@ -37,10 +37,12 @@ class SDFExporter(BaseExporter):
         skipped_count = 0
 
         for idx, result in enumerate(results):
-            # Get SMILES - prefer standardized, fallback to canonical
-            validation = result.get("validation", {})
-            smiles = result.get("standardized_smiles") or validation.get(
-                "canonical_smiles"
+            # Get SMILES - prefer standardized, fallback to canonical, then original
+            validation = result.get("validation") or {}
+            smiles = (
+                result.get("standardized_smiles")
+                or validation.get("canonical_smiles")
+                or result.get("smiles")  # Fallback to original input SMILES
             )
 
             if not smiles:
@@ -71,7 +73,7 @@ class SDFExporter(BaseExporter):
             overall_score = validation.get("overall_score", 0)
             mol.SetProp("overall_score", str(overall_score))
 
-            scoring = result.get("scoring", {})
+            scoring = result.get("scoring") or {}
             if scoring:
                 ml_score = scoring.get("ml_readiness_score", 0)
                 np_score = scoring.get("np_likeness_score", 0)
@@ -84,7 +86,7 @@ class SDFExporter(BaseExporter):
                 mol.SetProp("inchikey", inchikey)
 
             # Add alerts (comma-separated)
-            alert_names = extract_alert_names(result.get("alerts", {}))
+            alert_names = extract_alert_names(result.get("alerts") or {})
             if alert_names:
                 mol.SetProp("alerts", ", ".join(alert_names))
 

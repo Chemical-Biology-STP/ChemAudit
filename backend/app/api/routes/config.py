@@ -1,5 +1,5 @@
 """
-Configuration endpoint for ChemVault API.
+Configuration endpoint for ChemAudit API.
 
 Exposes deployment limits to the frontend for dynamic UI configuration.
 """

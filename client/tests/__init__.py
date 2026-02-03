@@ -1,3 +1,3 @@
 """
-Tests for ChemVault client.
+Tests for ChemAudit client.
 """

@@ -1,24 +1,24 @@
 version: '3.8'
 
-# Production deployment configuration for ChemVault
+# Production deployment configuration for ChemAudit
 # This configuration uses production-optimized images and settings
 
 services:
   # PostgreSQL database
   postgres:
     image: postgres:16-alpine
-    container_name: chemvault-postgres-prod
+    container_name: chemaudit-postgres-prod
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-chemvault}
+      POSTGRES_USER: ${POSTGRES_USER:-chemaudit}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
-      POSTGRES_DB: ${POSTGRES_DB:-chemvault}
+      POSTGRES_DB: ${POSTGRES_DB:-chemaudit}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - backend
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chemvault}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chemaudit}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -27,7 +27,7 @@ services:
   # Redis for caching and Celery message broker
   redis:
     image: redis:7-alpine
-    container_name: chemvault-redis-prod
+    container_name: chemaudit-redis-prod
     restart: unless-stopped
     command: redis-server --maxmemory ${REDIS_MAXMEMORY:-512mb} --maxmemory-policy allkeys-lru
     volumes:
@@ -48,10 +48,10 @@ services:
       dockerfile: Dockerfile.prod
       args:
         - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
-    container_name: chemvault-backend-prod
+    container_name: chemaudit-backend-prod
     restart: unless-stopped
     environment:
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-chemvault}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-chemvault}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-chemaudit}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-chemaudit}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
@@ -94,11 +94,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
-    container_name: chemvault-celery-worker-prod
+    container_name: chemaudit-celery-worker-prod
     restart: unless-stopped
     command: celery -A app.celery_app worker --loglevel=${CELERY_LOG_LEVEL:-info} --concurrency=${CELERY_WORKERS:-4} -Q default -n worker-default@%h
     environment:
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-chemvault}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-chemvault}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-chemaudit}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-chemaudit}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
@@ -127,11 +127,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
-    container_name: chemvault-celery-worker-priority-prod
+    container_name: chemaudit-celery-worker-priority-prod
     restart: unless-stopped
     command: celery -A app.celery_app worker --loglevel=${CELERY_LOG_LEVEL:-info} --concurrency=${CELERY_WORKERS_PRIORITY:-2} -Q high_priority -n worker-priority@%h
     environment:
-      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-chemvault}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-chemvault}
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-chemaudit}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-chemaudit}
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
@@ -158,7 +158,7 @@ services:
   # Nginx reverse proxy
   nginx:
     image: nginx:1.25-alpine
-    container_name: chemvault-nginx-prod
+    container_name: chemaudit-nginx-prod
     restart: unless-stopped
     ports:
       - "${HTTP_PORT:-80}:80"
@@ -184,7 +184,7 @@ services:
   # Prometheus monitoring (optional - disable in production if not needed)
   prometheus:
     image: prom/prometheus:v2.47.0
-    container_name: chemvault-prometheus-prod
+    container_name: chemaudit-prometheus-prod
     restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -209,7 +209,7 @@ services:
   # Grafana dashboards (optional - disable in production if not needed)
   grafana:
     image: grafana/grafana:10.2.0
-    container_name: chemvault-grafana-prod
+    container_name: chemaudit-grafana-prod
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}

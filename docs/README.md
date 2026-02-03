@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="ChemVault" width="100" />
+<img src="assets/logo.png" alt="ChemAudit" width="100" />
 
 # Documentation
 
-### ChemVault Documentation Hub
+### ChemAudit Documentation Hub
 
 </div>
 
@@ -26,8 +26,8 @@
 
 ```bash
 # Clone and start
-git clone https://github.com/yourusername/chemvault.git
-cd chemvault
+git clone https://github.com/yourusername/chemaudit.git
+cd chemaudit
 docker-compose up -d
 ```
 
@@ -66,6 +66,6 @@ docker-compose up -d
 
 <div align="center">
 
-**Questions?** [Open an Issue](https://github.com/yourusername/chemvault/issues)
+**Questions?** [Open an Issue](https://github.com/yourusername/chemaudit/issues)
 
 </div>

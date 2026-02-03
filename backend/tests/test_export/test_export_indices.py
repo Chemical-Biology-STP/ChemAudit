@@ -363,7 +363,11 @@ class TestExportIndices:
 
             # Return only results that pass the score filter (score >= 90)
             # Indices 0 (95), 1 (92), 4 (90) would pass the score filter
-            filtered_by_score = [sample_results[0], sample_results[1], sample_results[4]]
+            filtered_by_score = [
+                sample_results[0],
+                sample_results[1],
+                sample_results[4],
+            ]
             mock_storage.get_results.return_value = {
                 "results": filtered_by_score,
                 "page": 1,

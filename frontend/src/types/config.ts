@@ -1,5 +1,5 @@
 /**
- * Configuration types for ChemVault deployment profiles.
+ * Configuration types for ChemAudit deployment profiles.
  */
 
 /**
@@ -35,7 +35,7 @@ export const DEFAULT_LIMITS: DeploymentLimits = {
  * Default configuration used before API response.
  */
 export const DEFAULT_CONFIG: ConfigResponse = {
-  app_name: 'ChemVault',
+  app_name: 'ChemAudit',
   app_version: '0.1.0',
   deployment_profile: 'medium',
   limits: DEFAULT_LIMITS,

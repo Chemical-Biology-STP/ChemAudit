@@ -1,10 +1,10 @@
 """
-ChemVault Python Client
+ChemAudit Python Client
 
-Official Python client for the ChemVault API.
+Official Python client for the ChemAudit API.
 """
 
-from .client import ChemVaultClient
+from .client import ChemAuditClient
 from .models import (
     ValidationResult,
     AlertScreeningResult,
@@ -22,7 +22,7 @@ from .models import (
     Severity,
 )
 from .exceptions import (
-    ChemVaultError,
+    ChemAuditError,
     APIError,
     RateLimitError,
     AuthenticationError,
@@ -33,7 +33,7 @@ from .exceptions import (
 
 __version__ = "0.1.0"
 __all__ = [
-    "ChemVaultClient",
+    "ChemAuditClient",
     "ValidationResult",
     "AlertScreeningResult",
     "ScoreResult",
@@ -48,7 +48,7 @@ __all__ = [
     "AlertResult",
     "MoleculeInfo",
     "Severity",
-    "ChemVaultError",
+    "ChemAuditError",
     "APIError",
     "RateLimitError",
     "AuthenticationError",

@@ -11,7 +11,7 @@ from kombu import Exchange, Queue
 from app.core.config import settings
 
 celery_app = Celery(
-    "chemvault",
+    "chemaudit",
     broker=settings.REDIS_URL,
     backend=settings.REDIS_URL,
     include=["app.services.batch.tasks"],

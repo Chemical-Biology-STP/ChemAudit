@@ -1,4 +1,9 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+
+// Extend axios config type to support retry flag
+interface RetryableRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 /**
  * Detect the delimiter used in a text file (comma or tab).
@@ -105,12 +110,37 @@ export const DEBUG_MODE = import.meta.env.VITE_DEBUG === 'true';
 
 // Debug logging in development
 if (DEBUG_MODE) {
-  console.log('[ChemVault API] Configuration:', {
+  console.log('[ChemAudit API] Configuration:', {
     apiUrl: API_BASE_URL,
     docsUrl: API_DOCS_URL,
     environment: import.meta.env.MODE,
   });
 }
+
+// CSRF token management
+let csrfToken: string | null = null;
+
+async function fetchCsrfToken(): Promise<string> {
+  if (csrfToken) return csrfToken;
+  
+  try {
+    const response = await axios.get(`${API_BASE_URL}/csrf-token`);
+    csrfToken = response.data.csrf_token;
+    if (DEBUG_MODE) {
+      console.log('[ChemAudit API] CSRF token fetched');
+    }
+    return csrfToken!;
+  } catch (error) {
+    console.error('[ChemAudit API] Failed to fetch CSRF token:', error);
+    throw error;
+  }
+}
+
+// Export for manual refresh if needed
+export const refreshCsrfToken = async (): Promise<void> => {
+  csrfToken = null;
+  await fetchCsrfToken();
+};
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -119,6 +149,47 @@ export const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Add request interceptor to include CSRF token for state-changing requests
+api.interceptors.request.use(async (config) => {
+  const stateChangingMethods = ['post', 'put', 'delete', 'patch'];
+  if (config.method && stateChangingMethods.includes(config.method.toLowerCase())) {
+    try {
+      const token = await fetchCsrfToken();
+      config.headers['X-CSRF-Token'] = token;
+    } catch {
+      // Continue without token - let the server reject if needed
+      console.warn('[ChemAudit API] Proceeding without CSRF token');
+    }
+  }
+  return config;
+});
+
+// Add response interceptor to refresh CSRF token on 403
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (axios.isAxiosError(error) && error.response?.status === 403) {
+      const errorData = error.response.data;
+      if (errorData?.error === 'csrf_validation_failed') {
+        // Token expired or invalid, refresh and retry once
+        csrfToken = null;
+        const originalRequest = error.config as RetryableRequestConfig;
+        if (originalRequest && !originalRequest._retry) {
+          originalRequest._retry = true;
+          try {
+            const token = await fetchCsrfToken();
+            originalRequest.headers['X-CSRF-Token'] = token;
+            return api(originalRequest);
+          } catch {
+            // Retry failed, propagate original error
+          }
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const validationApi = {
   validate: async (request: ValidationRequest): Promise<ValidationResponse> => {
@@ -257,13 +328,15 @@ export const batchApi = {
    * @param smilesColumn - Column name for SMILES (CSV only)
    * @param nameColumn - Column name for molecule Name/ID (CSV only)
    * @param onUploadProgress - Optional callback for upload progress
+   * @param safetyOptions - Optional safety screening toggle options
    * @returns Job ID and initial status
    */
   uploadBatch: async (
     file: File,
     smilesColumn?: string,
     nameColumn?: string,
-    onUploadProgress?: (progress: number) => void
+    onUploadProgress?: (progress: number) => void,
+    safetyOptions?: { includeExtended?: boolean; includeChembl?: boolean; includeStandardization?: boolean }
   ): Promise<BatchUploadResponse> => {
     const formData = new FormData();
     formData.append('file', file);
@@ -272,6 +345,15 @@ export const batchApi = {
     }
     if (nameColumn) {
       formData.append('name_column', nameColumn);
+    }
+    if (safetyOptions?.includeExtended) {
+      formData.append('include_extended_safety', 'true');
+    }
+    if (safetyOptions?.includeChembl) {
+      formData.append('include_chembl_alerts', 'true');
+    }
+    if (safetyOptions?.includeStandardization) {
+      formData.append('include_standardization', 'true');
     }
 
     const response = await api.post<BatchUploadResponse>('/batch/upload', formData, {
@@ -311,6 +393,12 @@ export const batchApi = {
     }
     if (filters?.max_score !== undefined) {
       params.append('max_score', String(filters.max_score));
+    }
+    if (filters?.sort_by) {
+      params.append('sort_by', filters.sort_by);
+    }
+    if (filters?.sort_dir) {
+      params.append('sort_dir', filters.sort_dir);
     }
 
     const response = await api.get<BatchResultsResponse>(

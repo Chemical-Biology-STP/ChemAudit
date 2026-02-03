@@ -4,6 +4,7 @@ Result Aggregator Module
 Computes statistics from batch processing results.
 """
 
+import hashlib
 import json
 from collections import Counter
 from dataclasses import asdict, dataclass, field
@@ -29,6 +30,7 @@ class BatchStatisticsData:
     safety_pass_rate: Optional[float] = None
     score_distribution: Dict[str, int] = field(default_factory=dict)
     alert_summary: Dict[str, int] = field(default_factory=dict)
+    issue_summary: Dict[str, int] = field(default_factory=dict)
     processing_time_seconds: Optional[float] = None
 
 
@@ -54,6 +56,7 @@ def compute_statistics(results: List[Dict[str, Any]]) -> BatchStatisticsData:
     safety_passes = 0
     safety_total = 0
     alert_counts: Counter = Counter()
+    issue_counts: Counter = Counter()
 
     for result in results:
         if result.get("status") == "error" or result.get("error"):
@@ -61,23 +64,30 @@ def compute_statistics(results: List[Dict[str, Any]]) -> BatchStatisticsData:
         else:
             stats.successful += 1
 
-            # Collect validation scores
+            # Collect validation scores and issues
             if "validation" in result and result["validation"]:
                 score = result["validation"].get("overall_score")
                 if score is not None:
                     validation_scores.append(score)
+
+                # Count failed validation issues by check name
+                for issue in result["validation"].get("issues", []):
+                    if not issue.get("passed", True):
+                        check_name = issue.get("check_name", "Unknown")
+                        issue_counts[check_name] += 1
 
             # Collect scoring data
             if "scoring" in result and result["scoring"]:
                 scoring = result["scoring"]
 
                 # ML-readiness scores
-                ml_score = scoring.get("ml_readiness", {}).get("score")
+                ml_readiness = scoring.get("ml_readiness") or {}
+                ml_score = ml_readiness.get("score")
                 if ml_score is not None:
                     ml_readiness_scores.append(ml_score)
 
                 # Drug-likeness scores
-                druglikeness = scoring.get("druglikeness", {})
+                druglikeness = scoring.get("druglikeness") or {}
                 if druglikeness and "error" not in druglikeness:
                     qed = druglikeness.get("qed_score")
                     if qed is not None:
@@ -89,7 +99,7 @@ def compute_statistics(results: List[Dict[str, Any]]) -> BatchStatisticsData:
                             lipinski_passes += 1
 
                 # Safety filter scores
-                safety = scoring.get("safety_filters", {})
+                safety = scoring.get("safety_filters") or {}
                 if safety and "error" not in safety:
                     all_passed = safety.get("all_passed")
                     if all_passed is not None:
@@ -98,7 +108,7 @@ def compute_statistics(results: List[Dict[str, Any]]) -> BatchStatisticsData:
                             safety_passes += 1
 
                 # ADMET scores
-                admet = scoring.get("admet", {})
+                admet = scoring.get("admet") or {}
                 if admet and "error" not in admet:
                     sa = admet.get("sa_score")
                     if sa is not None:
@@ -140,6 +150,9 @@ def compute_statistics(results: List[Dict[str, Any]]) -> BatchStatisticsData:
     # Alert summary
     stats.alert_summary = dict(alert_counts)
 
+    # Issue summary (failed validation checks by name)
+    stats.issue_summary = dict(issue_counts)
+
     return stats
 
 
@@ -176,6 +189,7 @@ class ResultStorage:
     """
 
     RESULT_EXPIRY = 3600  # 1 hour
+    VIEW_CACHE_EXPIRY = 300  # 5 minutes for sorted/filtered views
     PAGE_SIZE = 50  # Default page size
 
     def __init__(self, redis_url: str = None):
@@ -219,6 +233,40 @@ class ResultStorage:
             ex=self.RESULT_EXPIRY,
         )
 
+    # Valid sort fields mapping to value extractors
+    SORT_EXTRACTORS = {
+        "index": lambda r: r.get("index", 0),
+        "name": lambda r: (r.get("name") or "").lower(),
+        "smiles": lambda r: r.get("smiles", "").lower(),
+        "score": lambda r: (r.get("validation") or {}).get("overall_score", -1),
+        "qed": lambda r: ((r.get("scoring") or {}).get("druglikeness") or {}).get(
+            "qed_score", -1
+        ),
+        "safety": lambda r: (r.get("alerts") or {}).get("alert_count", 0),
+        "status": lambda r: r.get("status", ""),
+        "issues": lambda r: len(
+            [
+                i
+                for i in ((r.get("validation") or {}).get("issues") or [])
+                if not i.get("passed", True)
+            ]
+        ),
+    }
+
+    @staticmethod
+    def _view_cache_key(
+        job_id: str,
+        status_filter: Optional[str],
+        min_score: Optional[int],
+        max_score: Optional[int],
+        sort_by: Optional[str],
+        sort_dir: Optional[str],
+    ) -> str:
+        """Build a deterministic Redis key for a filtered+sorted view."""
+        params = f"{status_filter}|{min_score}|{max_score}|{sort_by}|{sort_dir}"
+        param_hash = hashlib.md5(params.encode()).hexdigest()[:12]
+        return f"batch:view:{job_id}:{param_hash}"
+
     def get_results(
         self,
         job_id: str,
@@ -227,9 +275,14 @@ class ResultStorage:
         status_filter: Optional[str] = None,
         min_score: Optional[int] = None,
         max_score: Optional[int] = None,
+        sort_by: Optional[str] = None,
+        sort_dir: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
-        Get paginated results for a job with optional filtering.
+        Get paginated results for a job with optional filtering and sorting.
+
+        Uses a Redis view cache so that paginating through the same
+        filter+sort combo doesn't re-parse, re-filter, or re-sort.
 
         Args:
             job_id: Job identifier
@@ -238,29 +291,48 @@ class ResultStorage:
             status_filter: Filter by status ('success', 'error')
             min_score: Minimum validation score
             max_score: Maximum validation score
+            sort_by: Field to sort by (index, name, smiles, score, qed, safety, status, issues)
+            sort_dir: Sort direction ('asc' or 'desc')
 
         Returns:
             Dictionary with results, pagination info, and statistics
         """
         r = self._get_redis()
 
-        # Get all results
-        results_data = r.get(f"batch:results:{job_id}")
-        if not results_data:
-            return {
-                "results": [],
-                "page": page,
-                "page_size": page_size,
-                "total_results": 0,
-                "total_pages": 0,
-            }
+        empty = {
+            "results": [],
+            "page": page,
+            "page_size": page_size,
+            "total_results": 0,
+            "total_pages": 0,
+        }
 
-        results = json.loads(results_data)
+        # Check view cache first
+        view_key = self._view_cache_key(
+            job_id, status_filter, min_score, max_score, sort_by, sort_dir
+        )
+        cached_view = r.get(view_key)
 
-        # Apply filters
-        filtered = self._apply_filters(results, status_filter, min_score, max_score)
+        if cached_view:
+            filtered = json.loads(cached_view)
+        else:
+            # Cache miss — load raw results, filter, sort, then cache
+            results_data = r.get(f"batch:results:{job_id}")
+            if not results_data:
+                return empty
 
-        # Paginate
+            results = json.loads(results_data)
+            filtered = self._apply_filters(results, status_filter, min_score, max_score)
+
+            if sort_by and sort_by in self.SORT_EXTRACTORS:
+                reverse = sort_dir == "desc"
+                extractor = self.SORT_EXTRACTORS[sort_by]
+                filtered.sort(key=extractor, reverse=reverse)
+
+            # Cache the sorted+filtered view
+            r.set(view_key, json.dumps(filtered), ex=self.VIEW_CACHE_EXPIRY)
+
+        # Paginate from the (possibly cached) sorted list
         total_results = len(filtered)
         total_pages = (
             (total_results + page_size - 1) // page_size if total_results > 0 else 0
@@ -320,10 +392,13 @@ class ResultStorage:
         return filtered
 
     def delete_results(self, job_id: str) -> None:
-        """Delete stored results for a job."""
+        """Delete stored results and any cached views for a job."""
         r = self._get_redis()
         r.delete(f"batch:results:{job_id}")
         r.delete(f"batch:stats:{job_id}")
+        # Clean up any cached sorted/filtered views
+        for key in r.scan_iter(f"batch:view:{job_id}:*"):
+            r.delete(key)
 
 
 # Singleton instance

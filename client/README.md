@@ -1,11 +1,11 @@
-# ChemVault Python Client
+# ChemAudit Python Client
 
-Official Python client for the ChemVault API - comprehensive chemical structure validation, standardization, and ML-readiness assessment.
+Official Python client for the ChemAudit API - comprehensive chemical structure validation, standardization, and ML-readiness assessment.
 
 ## Installation
 
 ```bash
-pip install chemvault-client
+pip install chemaudit-client
 ```
 
 Or install from source:
@@ -18,10 +18,10 @@ pip install -e .
 ## Quick Start
 
 ```python
-from chemvault import ChemVaultClient
+from chemaudit import ChemAuditClient
 
 # Create client (optional API key for higher rate limits)
-client = ChemVaultClient(
+client = ChemAuditClient(
     base_url="http://localhost:8000",
     api_key="your-api-key",  # Optional
 )
@@ -65,10 +65,10 @@ This client is **intentionally synchronous-only** using `httpx.Client`. This des
 ```python
 # Async usage example
 import asyncio
-from chemvault import ChemVaultClient
+from chemaudit import ChemAuditClient
 
 async def validate_async():
-    client = ChemVaultClient()
+    client = ChemAuditClient()
     result = await asyncio.to_thread(client.validate, "CCO")
     return result
 ```
@@ -158,7 +158,7 @@ print(f"Alert Distribution: {stats.alert_summary}")
 
 ```python
 # Automatic cleanup
-with ChemVaultClient() as client:
+with ChemAuditClient() as client:
     result = client.validate("CCO")
     print(result.overall_score)
 # Client automatically closed
@@ -166,11 +166,11 @@ with ChemVaultClient() as client:
 
 ## API Reference
 
-### ChemVaultClient
+### ChemAuditClient
 
 **Constructor:**
 ```python
-ChemVaultClient(
+ChemAuditClient(
     base_url: str = "http://localhost:8000",
     api_key: Optional[str] = None,
     timeout: float = 30.0,
@@ -209,7 +209,7 @@ ChemVaultClient(
 
 ### Exceptions
 
-- `ChemVaultError` - Base exception
+- `ChemAuditError` - Base exception
 - `APIError` - API returned error
 - `RateLimitError` - Rate limit exceeded
 - `AuthenticationError` - Invalid API key
@@ -230,15 +230,15 @@ The client automatically retries on rate limit errors (429) with exponential bac
 ## Error Handling
 
 ```python
-from chemvault import (
-    ChemVaultClient,
+from chemaudit import (
+    ChemAuditClient,
     ValidationError,
     RateLimitError,
     AuthenticationError,
     APIError,
 )
 
-client = ChemVaultClient()
+client = ChemAuditClient()
 
 try:
     result = client.validate("invalid-smiles")
@@ -280,6 +280,6 @@ MIT License
 
 ## Links
 
-- **Documentation:** https://github.com/yourusername/chemvault#readme
-- **Issue Tracker:** https://github.com/yourusername/chemvault/issues
+- **Documentation:** https://github.com/yourusername/chemaudit#readme
+- **Issue Tracker:** https://github.com/yourusername/chemaudit/issues
 - **API Documentation:** http://localhost:8000/docs (when server is running)

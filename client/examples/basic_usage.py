@@ -1,10 +1,10 @@
 """
-Basic usage examples for ChemVault client.
+Basic usage examples for ChemAudit client.
 
 Demonstrates single molecule validation, alert screening, standardization, and scoring.
 """
 
-from chemvault import ChemVaultClient
+from chemaudit import ChemAuditClient
 
 # Configuration
 API_BASE_URL = "http://localhost:8000"
@@ -12,11 +12,11 @@ API_KEY = None  # Set to your API key for higher rate limits
 
 
 def main():
-    print("ChemVault Client - Basic Usage Examples\n")
+    print("ChemAudit Client - Basic Usage Examples\n")
     print("=" * 60)
 
     # Create client (use context manager for automatic cleanup)
-    with ChemVaultClient(base_url=API_BASE_URL, api_key=API_KEY) as client:
+    with ChemAuditClient(base_url=API_BASE_URL, api_key=API_KEY) as client:
         # Example 1: Simple validation
         print("\n1. Simple Validation")
         print("-" * 60)

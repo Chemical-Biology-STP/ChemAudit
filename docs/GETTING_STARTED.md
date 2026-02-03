@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="ChemVault" width="80" />
+<img src="assets/logo.png" alt="ChemAudit" width="80" />
 
 # Getting Started
 
-### Your First Steps with ChemVault
+### Your First Steps with ChemAudit
 
 </div>
 
@@ -27,8 +27,8 @@ The fastest way to get started:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chemvault.git
-cd chemvault
+git clone https://github.com/yourusername/chemaudit.git
+cd chemaudit
 
 # Start all services (development mode)
 docker-compose up -d
@@ -246,6 +246,6 @@ Now that you've completed your first validation, explore more features:
 
 <div align="center">
 
-**Questions?** Check the [FAQ](TROUBLESHOOTING.md) or [Open an Issue](https://github.com/yourusername/chemvault/issues)
+**Questions?** Check the [FAQ](TROUBLESHOOTING.md) or [Open an Issue](https://github.com/yourusername/chemaudit/issues)
 
 </div>

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ChemVault Deployment Script
+# ChemAudit Deployment Script
 # Usage: ./deploy.sh [profile]
 #
 # Profiles: small, medium (default), large, xl, coconut
@@ -27,7 +27,7 @@ PROFILES=("small" "medium" "large" "xl" "coconut")
 # Function to print colored output
 print_header() {
     echo -e "\n${BLUE}${BOLD}╔════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}${BOLD}║${NC}          ${CYAN}${BOLD}ChemVault Deployment Script${NC}              ${BLUE}${BOLD}║${NC}"
+    echo -e "${BLUE}${BOLD}║${NC}          ${CYAN}${BOLD}ChemAudit Deployment Script${NC}              ${BLUE}${BOLD}║${NC}"
     echo -e "${BLUE}${BOLD}╚════════════════════════════════════════════════════╝${NC}\n"
 }
 
@@ -309,7 +309,7 @@ main() {
     run_docker_compose
 
     echo -e "\n${GREEN}${BOLD}Deployment complete!${NC}"
-    echo -e "Access ChemVault at: ${CYAN}http://localhost${NC}\n"
+    echo -e "Access ChemAudit at: ${CYAN}http://localhost${NC}\n"
 }
 
 # Run main function

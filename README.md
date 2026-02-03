@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/Banner_logo.png" alt="ChemVault" width="600" />
+<img src="docs/assets/Banner_logo.png" alt="ChemAudit" width="600" />
 
 ### Chemical Structure Validation & Quality Assessment Platform
 
@@ -25,7 +25,7 @@
 
 <br />
 
-<img src="docs/assets/screenshot-dashboard.png" alt="ChemVault Dashboard" width="800" />
+<img src="docs/assets/screenshot-dashboard.png" alt="ChemAudit Dashboard" width="800" />
 
 </div>
 
@@ -116,8 +116,8 @@ Cross-reference against major chemical databases
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chemvault.git
-cd chemvault
+git clone https://github.com/yourusername/chemaudit.git
+cd chemaudit
 
 # Start all services (development)
 docker-compose up -d
@@ -225,9 +225,9 @@ Process large datasets with ease:
 
 ```python
 # Python client example
-from chemvault import ChemVaultClient
+from chemaudit import ChemAuditClient
 
-client = ChemVaultClient("http://localhost:8000")
+client = ChemAuditClient("http://localhost:8000")
 
 # Upload and process
 job = client.upload_batch("molecules.sdf")
@@ -323,7 +323,7 @@ curl -X POST http://localhost:8000/api/v1/score \
 ## 🏗️ Project Structure
 
 ```
-chemvault/
+chemaudit/
 ├── backend/
 │   ├── app/
 │   │   ├── api/routes/       # API endpoints
@@ -398,7 +398,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**[⬆ Back to Top](#-chemvault)**
+**[⬆ Back to Top](#-chemaudit)**
 
 Made with ☕ by [Kohulan.R](https://github.com/Kohulan) at [Friedrich Schiller University Jena](https://www.uni-jena.de/)
 

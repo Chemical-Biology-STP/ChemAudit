@@ -228,3 +228,82 @@ class TestResultAggregation:
         assert stats.successful == 0
         assert stats.errors == 0
         assert stats.avg_validation_score is None
+
+    def test_compute_statistics_with_qed_and_sa_scores(self):
+        """Test statistics computation with QED and SA scores."""
+        from app.services.batch.result_aggregator import compute_statistics
+
+        results = [
+            {
+                "status": "success",
+                "validation": {"overall_score": 85},
+                "alerts": {"alerts": []},
+                "scoring": {
+                    "ml_readiness": {"score": 80},
+                    "druglikeness": {
+                        "qed_score": 0.75,
+                        "lipinski_passed": True,
+                    },
+                    "admet": {
+                        "sa_score": 3.5,
+                    },
+                    "safety_filters": {
+                        "all_passed": True,
+                    },
+                },
+            },
+            {
+                "status": "success",
+                "validation": {"overall_score": 75},
+                "alerts": {"alerts": []},
+                "scoring": {
+                    "ml_readiness": {"score": 70},
+                    "druglikeness": {
+                        "qed_score": 0.65,
+                        "lipinski_passed": False,
+                    },
+                    "admet": {
+                        "sa_score": 4.2,
+                    },
+                    "safety_filters": {
+                        "all_passed": False,
+                    },
+                },
+            },
+            {
+                "status": "success",
+                "validation": {"overall_score": 90},
+                "alerts": {"alerts": []},
+                "scoring": {
+                    "ml_readiness": {"score": 85},
+                    "druglikeness": {
+                        "qed_score": 0.80,
+                        "lipinski_passed": True,
+                    },
+                    "admet": {
+                        "sa_score": 2.8,
+                    },
+                    "safety_filters": {
+                        "all_passed": True,
+                    },
+                },
+            },
+        ]
+
+        stats = compute_statistics(results)
+
+        assert stats.total == 3
+        assert stats.successful == 3
+        assert stats.errors == 0
+
+        # Check average QED score: (0.75 + 0.65 + 0.80) / 3 = 0.73 (rounded to 2 decimals)
+        assert stats.avg_qed_score == 0.73
+
+        # Check average SA score: (3.5 + 4.2 + 2.8) / 3 = 3.5 (rounded to 1 decimal)
+        assert stats.avg_sa_score == 3.5
+
+        # Check Lipinski pass rate: 2 out of 3 passed = 66.7%
+        assert stats.lipinski_pass_rate == 66.7
+
+        # Check safety pass rate: 2 out of 3 passed = 66.7%
+        assert stats.safety_pass_rate == 66.7

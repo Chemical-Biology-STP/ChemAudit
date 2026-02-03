@@ -193,7 +193,7 @@ export function Layout({ children }: LayoutProps) {
               <div className="flex items-center gap-3 sm:gap-4">
                 {/* Copyright */}
                 <span className="text-xs text-[var(--color-text-muted)]">
-                  &copy; {new Date().getFullYear()} ChemVault
+                  &copy; {new Date().getFullYear()} ChemAudit
                 </span>
 
                 {/* Subtle separator dot */}
@@ -212,7 +212,7 @@ export function Layout({ children }: LayoutProps) {
 
                 {/* GitHub link */}
                 <motion.a
-                  href="https://github.com/Kohulan/ChemVault"
+                  href="https://github.com/Kohulan/ChemAudit"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-2 text-[var(--color-text-muted)] hover:text-[var(--color-primary)] transition-colors duration-200 font-medium"

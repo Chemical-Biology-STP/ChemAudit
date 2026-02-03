@@ -1,13 +1,13 @@
 """
-Batch processing examples for ChemVault client.
+Batch processing examples for ChemAudit client.
 
 Demonstrates batch file submission, waiting for completion, and iterating results.
 """
 
 import time
 from pathlib import Path
-from chemvault import ChemVaultClient
-from chemvault.exceptions import TimeoutError, APIError
+from chemaudit import ChemAuditClient
+from chemaudit.exceptions import TimeoutError, APIError
 
 # Configuration
 API_BASE_URL = "http://localhost:8000"
@@ -31,14 +31,14 @@ CC(C)NCC(COc1ccccc1)O,Propranolol
 
 
 def main():
-    print("ChemVault Client - Batch Processing Examples\n")
+    print("ChemAudit Client - Batch Processing Examples\n")
     print("=" * 60)
 
     # Create sample CSV if it doesn't exist
     if not Path(SAMPLE_CSV).exists():
         create_sample_csv()
 
-    with ChemVaultClient(base_url=API_BASE_URL, api_key=API_KEY) as client:
+    with ChemAuditClient(base_url=API_BASE_URL, api_key=API_KEY) as client:
         # Example 1: Submit batch job
         print("\n1. Submit Batch Job")
         print("-" * 60)

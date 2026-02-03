@@ -38,7 +38,7 @@ class JSONExporter(BaseExporter):
                 "export_date": datetime.now(timezone.utc).isoformat(),
                 "total_count": len(results),
                 "format_version": "1.0",
-                "tool": "ChemVault",
+                "tool": "ChemAudit",
             },
             "results": results,
         }

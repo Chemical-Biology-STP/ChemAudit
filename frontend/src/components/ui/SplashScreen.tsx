@@ -239,7 +239,7 @@ export function SplashScreen({ isVisible, onComplete }: SplashScreenProps) {
               />
               <img
                 src="/logo.png"
-                alt="ChemVault"
+                alt="ChemAudit"
                 className="relative w-24 h-24 object-contain drop-shadow-2xl"
                 style={{
                   filter: isDark
@@ -268,7 +268,7 @@ export function SplashScreen({ isVisible, onComplete }: SplashScreenProps) {
                   Chem
                 </span>
                 <span style={{ color: colors.text }} className="font-semibold">
-                  Vault
+                  Audit
                 </span>
               </h1>
 

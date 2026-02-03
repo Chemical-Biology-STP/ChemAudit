@@ -28,13 +28,25 @@ class CSVExporter(BaseExporter):
         # Extract relevant fields from results
         rows = []
         for idx, result in enumerate(results):
-            # Get validation data
-            validation = result.get("validation", {})
-            scoring = result.get("scoring", {})
-            alerts = result.get("alerts", {})
+            # Get validation data - use 'or {}' to handle None values
+            validation = result.get("validation") or {}
+            scoring = result.get("scoring") or {}
+            alerts = result.get("alerts") or {}
 
             # Count alerts
             alerts_count = count_alerts(alerts)
+
+            # Get QED and SA scores
+            qed_score = None
+            sa_score = None
+            if scoring:
+                druglikeness = scoring.get("druglikeness") or {}
+                if druglikeness and "error" not in druglikeness:
+                    qed_score = druglikeness.get("qed_score")
+
+                admet = scoring.get("admet") or {}
+                if admet and "error" not in admet:
+                    sa_score = admet.get("sa_score")
 
             # Collect issues for summary
             issues = validation.get("issues", [])
@@ -55,6 +67,8 @@ class CSVExporter(BaseExporter):
                 "ml_readiness_score": (
                     scoring.get("ml_readiness_score", 0) if scoring else 0
                 ),
+                "qed_score": qed_score if qed_score is not None else "",
+                "sa_score": sa_score if sa_score is not None else "",
                 "np_likeness_score": (
                     scoring.get("np_likeness_score", 0) if scoring else 0
                 ),
@@ -73,6 +87,8 @@ class CSVExporter(BaseExporter):
             "inchikey",
             "overall_score",
             "ml_readiness_score",
+            "qed_score",
+            "sa_score",
             "np_likeness_score",
             "alerts_count",
             "issues_summary",

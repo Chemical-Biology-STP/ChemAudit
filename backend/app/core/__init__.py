@@ -11,21 +11,21 @@ from app.core.cache import (
 )
 from app.core.config import settings
 from app.core.exceptions import (
-    ChemVaultException,
+    ChemAuditException,
     NotFoundError,
     ParseError,
     ValidationError,
-    chemvault_exception_handler,
+    chemaudit_exception_handler,
     generic_exception_handler,
 )
 
 __all__ = [
     "settings",
-    "ChemVaultException",
+    "ChemAuditException",
     "ParseError",
     "ValidationError",
     "NotFoundError",
-    "chemvault_exception_handler",
+    "chemaudit_exception_handler",
     "generic_exception_handler",
     "validation_cache_key",
     "get_cached_validation",

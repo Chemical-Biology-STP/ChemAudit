@@ -55,6 +55,18 @@ async def upload_batch(
         default=None,
         description="Column name containing molecule names/IDs (for CSV files)",
     ),
+    include_extended_safety: bool = Form(
+        default=False,
+        description="Include NIH and ZINC structural alert filters",
+    ),
+    include_chembl_alerts: bool = Form(
+        default=False,
+        description="Include ChEMBL pharma company structural alert filters",
+    ),
+    include_standardization: bool = Form(
+        default=False,
+        description="Run ChEMBL standardization pipeline on each molecule",
+    ),
     api_key: Optional[str] = Depends(get_api_key),
 ):
     """
@@ -157,8 +169,15 @@ async def upload_batch(
         for m in molecules
     ]
 
+    # Build safety screening options
+    safety_options = {
+        "include_extended": include_extended_safety,
+        "include_chembl": include_chembl_alerts,
+        "include_standardization": include_standardization,
+    }
+
     # Start batch processing
-    process_batch_job(job_id, mol_dicts)
+    process_batch_job(job_id, mol_dicts, safety_options=safety_options)
 
     return BatchUploadResponse(
         job_id=job_id,
@@ -169,7 +188,7 @@ async def upload_batch(
 
 
 @router.get("/batch/{job_id}", response_model=BatchResultsResponse)
-@limiter.limit("10/minute", key_func=get_rate_limit_key)
+@limiter.limit("60/minute", key_func=get_rate_limit_key)
 async def get_batch_results(
     request: Request,
     job_id: str,
@@ -184,6 +203,14 @@ async def get_batch_results(
     ),
     max_score: Optional[int] = Query(
         default=None, ge=0, le=100, description="Maximum validation score"
+    ),
+    sort_by: Optional[str] = Query(
+        default=None,
+        description="Sort field (index, name, smiles, score, qed, safety, status, issues)",
+    ),
+    sort_dir: Optional[str] = Query(
+        default=None,
+        description="Sort direction (asc, desc)",
     ),
     api_key: Optional[str] = Depends(get_api_key),
 ):
@@ -215,8 +242,13 @@ async def get_batch_results(
             errors=stats_data.errors,
             avg_validation_score=stats_data.avg_validation_score,
             avg_ml_readiness_score=stats_data.avg_ml_readiness_score,
+            avg_qed_score=stats_data.avg_qed_score,
+            avg_sa_score=stats_data.avg_sa_score,
+            lipinski_pass_rate=stats_data.lipinski_pass_rate,
+            safety_pass_rate=stats_data.safety_pass_rate,
             score_distribution=stats_data.score_distribution,
             alert_summary=stats_data.alert_summary,
+            issue_summary=stats_data.issue_summary,
             processing_time_seconds=stats_data.processing_time_seconds,
         )
 
@@ -228,6 +260,8 @@ async def get_batch_results(
         status_filter=status_filter,
         min_score=min_score,
         max_score=max_score,
+        sort_by=sort_by,
+        sort_dir=sort_dir,
     )
 
     # Convert to response model
@@ -241,6 +275,7 @@ async def get_batch_results(
             validation=r.get("validation"),
             alerts=r.get("alerts"),
             scoring=r.get("scoring"),
+            standardization=r.get("standardization"),
         )
         for r in result_data.get("results", [])
     ]
@@ -308,8 +343,13 @@ async def get_batch_stats(
         errors=stats_data.errors,
         avg_validation_score=stats_data.avg_validation_score,
         avg_ml_readiness_score=stats_data.avg_ml_readiness_score,
+        avg_qed_score=stats_data.avg_qed_score,
+        avg_sa_score=stats_data.avg_sa_score,
+        lipinski_pass_rate=stats_data.lipinski_pass_rate,
+        safety_pass_rate=stats_data.safety_pass_rate,
         score_distribution=stats_data.score_distribution,
         alert_summary=stats_data.alert_summary,
+        issue_summary=stats_data.issue_summary,
         processing_time_seconds=stats_data.processing_time_seconds,
     )
 

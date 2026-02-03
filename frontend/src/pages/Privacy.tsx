@@ -22,7 +22,7 @@ export function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-          ChemVault is designed with privacy in mind. We believe in transparency about how your data is handled.
+          ChemAudit is designed with privacy in mind. We believe in transparency about how your data is handled.
         </p>
       </motion.div>
 
@@ -72,7 +72,7 @@ export function PrivacyPage() {
               </div>
               <div>
                 <h3 className="font-medium text-[var(--color-text-primary)]">Theme Preference</h3>
-                <p className="text-sm text-[var(--color-text-muted)]">localStorage key: <code className="bg-[var(--color-surface-elevated)] px-1.5 py-0.5 rounded text-xs">chemvault-theme</code></p>
+                <p className="text-sm text-[var(--color-text-muted)]">localStorage key: <code className="bg-[var(--color-surface-elevated)] px-1.5 py-0.5 rounded text-xs">chemaudit-theme</code></p>
               </div>
             </div>
             <p className="text-sm text-[var(--color-text-secondary)]">
@@ -140,7 +140,7 @@ export function PrivacyPage() {
             GDPR Compliance
           </h2>
           <p className="text-[var(--color-text-secondary)] mb-3">
-            Since ChemVault does not collect, store, or process personal data, most GDPR requirements do not apply.
+            Since ChemAudit does not collect, store, or process personal data, most GDPR requirements do not apply.
             The theme preference stored in localStorage is considered a "strictly necessary" functional preference
             and does not require consent under GDPR Article 6(1)(f).
           </p>
@@ -158,7 +158,7 @@ export function PrivacyPage() {
           <p className="text-[var(--color-text-secondary)]">
             If you have any questions about this privacy policy, please open an issue on our{' '}
             <a
-              href="https://github.com/Kohulan/ChemVault"
+              href="https://github.com/Kohulan/ChemAudit"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[var(--color-primary)] hover:underline font-medium"

@@ -1,5 +1,5 @@
 """
-ChemVault API - Chemical Structure Validation Suite
+ChemAudit API - Chemical Structure Validation Suite
 """
 
 from contextlib import asynccontextmanager
@@ -24,8 +24,8 @@ from app.api.routes import (
 )
 from app.core.config import settings
 from app.core.exceptions import (
-    ChemVaultException,
-    chemvault_exception_handler,
+    ChemAuditException,
+    chemaudit_exception_handler,
     generic_exception_handler,
 )
 from app.core.rate_limit import (
@@ -63,7 +63,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="ChemVault API",
+    title="ChemAudit API",
     description="Chemical Structure Validation and Standardization API",
     version=settings.APP_VERSION,
     lifespan=lifespan,
@@ -145,7 +145,7 @@ async def security_middleware(request: Request, call_next):
 
 # Register exception handlers
 app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
-app.add_exception_handler(ChemVaultException, chemvault_exception_handler)
+app.add_exception_handler(ChemAuditException, chemaudit_exception_handler)
 app.add_exception_handler(Exception, generic_exception_handler)
 
 # Include routers
@@ -168,7 +168,7 @@ if settings.ENABLE_METRICS:
         should_respect_env_var=True,
         should_instrument_requests_inprogress=True,
         excluded_handlers=["/metrics", "/health", "/api/v1/health"],
-        inprogress_name="chemvault_inprogress_requests",
+        inprogress_name="chemaudit_inprogress_requests",
         inprogress_labels=True,
     )
     instrumentator.instrument(app).expose(app, endpoint="/metrics")

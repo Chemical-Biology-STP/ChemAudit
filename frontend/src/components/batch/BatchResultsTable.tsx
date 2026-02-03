@@ -479,15 +479,23 @@ export function BatchResultsTable({
                                       <FlaskConical className="w-3.5 h-3.5 text-[var(--color-primary)]" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                      <h4 className="text-xs font-semibold text-[var(--color-text-primary)] tracking-tight">Structure</h4>
+                                      <div className="flex items-center gap-1.5">
+                                        <h4 className="text-xs font-semibold text-[var(--color-text-primary)] tracking-tight">Structure</h4>
+                                        {result.standardization?.standardized_smiles && result.standardization.changed && (
+                                          <span className="px-1.5 py-0.5 rounded text-[9px] font-medium bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                                            Standardized
+                                          </span>
+                                        )}
+                                      </div>
                                       {result.name && (
                                         <p className="text-[10px] text-[var(--color-text-muted)] truncate">{result.name}</p>
                                       )}
                                     </div>
                                   </div>
                                   <div className="flex-1 flex items-center justify-center rounded-xl bg-white dark:bg-gray-900/50 border border-[var(--color-border-subtle)] min-h-[180px]">
+                                    {/* Use standardized SMILES for 2D depiction when available */}
                                     <MoleculeViewer
-                                      smiles={result.smiles}
+                                      smiles={result.standardization?.standardized_smiles || result.smiles}
                                       highlightAtoms={highlightedAtoms}
                                       width={280}
                                       height={220}
@@ -502,12 +510,38 @@ export function BatchResultsTable({
                                       </div>
                                     </div>
                                   )}
-                                  <div className="mt-2 flex items-start gap-2 rounded-lg bg-[var(--color-surface-sunken)] border border-[var(--color-border-subtle)] px-2.5 py-1.5">
-                                    <p className="text-[11px] font-mono text-[var(--color-text-secondary)] break-all flex-1 leading-relaxed">
-                                      {result.smiles}
-                                    </p>
-                                    <CopyButton text={result.smiles} size={13} className="mt-0.5 flex-shrink-0" />
-                                  </div>
+                                  {/* Show both original and standardized SMILES when standardization was applied */}
+                                  {result.standardization?.standardized_smiles && result.standardization.changed ? (
+                                    <div className="mt-2 space-y-1.5">
+                                      {/* Original SMILES */}
+                                      <div className="rounded-lg bg-[var(--color-surface-sunken)] border border-[var(--color-border-subtle)] px-2.5 py-1.5">
+                                        <p className="text-[9px] font-medium text-[var(--color-text-muted)] uppercase tracking-wide mb-0.5">Original</p>
+                                        <div className="flex items-start gap-2">
+                                          <p className="text-[11px] font-mono text-[var(--color-text-secondary)] break-all flex-1 leading-relaxed">
+                                            {result.smiles}
+                                          </p>
+                                          <CopyButton text={result.smiles} size={13} className="mt-0.5 flex-shrink-0" />
+                                        </div>
+                                      </div>
+                                      {/* Standardized SMILES */}
+                                      <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 px-2.5 py-1.5">
+                                        <p className="text-[9px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-0.5">Standardized</p>
+                                        <div className="flex items-start gap-2">
+                                          <p className="text-[11px] font-mono text-[var(--color-text-secondary)] break-all flex-1 leading-relaxed">
+                                            {result.standardization.standardized_smiles}
+                                          </p>
+                                          <CopyButton text={result.standardization.standardized_smiles} size={13} className="mt-0.5 flex-shrink-0" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="mt-2 flex items-start gap-2 rounded-lg bg-[var(--color-surface-sunken)] border border-[var(--color-border-subtle)] px-2.5 py-1.5">
+                                      <p className="text-[11px] font-mono text-[var(--color-text-secondary)] break-all flex-1 leading-relaxed">
+                                        {result.smiles}
+                                      </p>
+                                      <CopyButton text={result.smiles} size={13} className="mt-0.5 flex-shrink-0" />
+                                    </div>
+                                  )}
                                 </>
                               ) : (
                                 <div className="flex-1 flex items-center justify-center rounded-xl bg-red-500/5 border border-red-500/10 min-h-[180px]">

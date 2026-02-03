@@ -149,7 +149,7 @@ class TestPDFReportGenerator:
         # Verify first page has content
         first_page = reader.pages[0]
         text = first_page.extract_text()
-        assert "ChemVault" in text
+        assert "ChemAudit" in text
         # PDF text extraction may break "Batch Validation Report" across lines
         assert "Validation" in text and "Report" in text
 

@@ -224,6 +224,4 @@ async def export_batch_results_post(
     ```
     """
     # Use shared export logic with indices from request body
-    return _export_results(
-        job_id, format, score_min, score_max, status, body.indices
-    )
+    return _export_results(job_id, format, score_min, score_max, status, body.indices)

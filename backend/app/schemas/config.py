@@ -1,5 +1,5 @@
 """
-Configuration response schemas for ChemVault API.
+Configuration response schemas for ChemAudit API.
 """
 
 from pydantic import BaseModel, Field, computed_field
@@ -31,7 +31,7 @@ class ConfigResponse(BaseModel):
     model_config = {
         "json_schema_extra": {
             "example": {
-                "app_name": "ChemVault",
+                "app_name": "ChemAudit",
                 "app_version": "0.1.0",
                 "deployment_profile": "medium",
                 "limits": {

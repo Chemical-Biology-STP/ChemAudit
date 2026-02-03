@@ -11,6 +11,7 @@ Usage:
 Requirements:
     pip install pyinstrument
 """
+
 import argparse
 import sys
 import time

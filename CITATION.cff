@@ -4,10 +4,10 @@ authors:
   - family-names: "Rajan"
     given-names: "Kohulan"
     orcid: "https://orcid.org/0000-0003-1066-7792"
-title: "ChemVault"
+title: "ChemAudit"
 version: 0.1.0
 date-released: 2026-01-29
-url: "https://github.com/Kohulan/ChemVault"
+url: "https://github.com/Kohulan/ChemAudit"
 license: MIT
 keywords:
   - cheminformatics

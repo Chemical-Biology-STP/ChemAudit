@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="ChemVault" width="80" />
+<img src="assets/logo.png" alt="ChemAudit" width="80" />
 
 # Troubleshooting Guide
 
@@ -417,12 +417,12 @@ docker-compose up -d
 
 **Ensure postgres is healthy:**
 ```bash
-docker-compose exec postgres pg_isready -U chemvault
+docker-compose exec postgres pg_isready -U chemaudit
 ```
 
 **Check connection string in `.env`:**
 ```env
-DATABASE_URL=postgresql+asyncpg://chemvault:password@postgres:5432/chemvault
+DATABASE_URL=postgresql+asyncpg://chemaudit:password@postgres:5432/chemaudit
 ```
 
 Note: Use `postgres` (service name) not `localhost` inside Docker.
@@ -453,7 +453,7 @@ docker stats --no-stream
 
 ### Get Support
 
-1. **Search existing issues:** [GitHub Issues](https://github.com/yourusername/chemvault/issues)
+1. **Search existing issues:** [GitHub Issues](https://github.com/yourusername/chemaudit/issues)
 2. **Create new issue** with:
    - Description of the problem
    - Steps to reproduce
@@ -464,6 +464,6 @@ docker stats --no-stream
 
 <div align="center">
 
-**Can't find your issue?** [Open a GitHub Issue](https://github.com/yourusername/chemvault/issues/new)
+**Can't find your issue?** [Open a GitHub Issue](https://github.com/yourusername/chemaudit/issues/new)
 
 </div>

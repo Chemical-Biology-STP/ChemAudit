@@ -36,13 +36,19 @@ class ExcelExporter(BaseExporter):
         successful_count = 0
         total_score = 0
         total_ml_score = 0
+        qed_scores = []
+        sa_scores = []
+        lipinski_passes = 0
+        lipinski_total = 0
+        safety_passes = 0
+        safety_total = 0
         alert_distribution: Dict[str, int] = {}
 
         for idx, result in enumerate(results):
-            # Get validation data
-            validation = result.get("validation", {})
-            scoring = result.get("scoring", {})
-            alerts = result.get("alerts", {})
+            # Get validation data - use 'or {}' to handle None values
+            validation = result.get("validation") or {}
+            scoring = result.get("scoring") or {}
+            alerts = result.get("alerts") or {}
             status = result.get("status", "error")
 
             if status == "success":
@@ -51,6 +57,38 @@ class ExcelExporter(BaseExporter):
             # Get scores
             overall_score = validation.get("overall_score", 0)
             ml_score = scoring.get("ml_readiness_score", 0) if scoring else 0
+
+            # Get QED and SA scores
+            qed_score = None
+            sa_score = None
+            lipinski_passed = None
+            safety_passed = None
+
+            if scoring:
+                druglikeness = scoring.get("druglikeness") or {}
+                if druglikeness and "error" not in druglikeness:
+                    qed_score = druglikeness.get("qed_score")
+                    if qed_score is not None:
+                        qed_scores.append(qed_score)
+                    lipinski_passed = druglikeness.get("lipinski_passed")
+                    if lipinski_passed is not None:
+                        lipinski_total += 1
+                        if lipinski_passed:
+                            lipinski_passes += 1
+
+                admet = scoring.get("admet") or {}
+                if admet and "error" not in admet:
+                    sa_score = admet.get("sa_score")
+                    if sa_score is not None:
+                        sa_scores.append(sa_score)
+
+                safety_filters = scoring.get("safety_filters") or {}
+                if safety_filters and "error" not in safety_filters:
+                    safety_passed = safety_filters.get("all_passed")
+                    if safety_passed is not None:
+                        safety_total += 1
+                        if safety_passed:
+                            safety_passes += 1
 
             if status == "success":
                 total_score += overall_score
@@ -78,6 +116,8 @@ class ExcelExporter(BaseExporter):
                 "inchikey": validation.get("inchikey", ""),
                 "overall_score": overall_score,
                 "ml_readiness_score": ml_score,
+                "qed_score": qed_score if qed_score is not None else "",
+                "sa_score": sa_score if sa_score is not None else "",
                 "np_likeness_score": (
                     scoring.get("np_likeness_score", 0) if scoring else 0
                 ),
@@ -163,6 +203,14 @@ class ExcelExporter(BaseExporter):
             avg_ml_score = (
                 total_ml_score / successful_count if successful_count > 0 else 0
             )
+            avg_qed = sum(qed_scores) / len(qed_scores) if qed_scores else 0
+            avg_sa = sum(sa_scores) / len(sa_scores) if sa_scores else 0
+            lipinski_pass_rate = (
+                (lipinski_passes / lipinski_total) * 100 if lipinski_total > 0 else 0
+            )
+            safety_pass_rate = (
+                (safety_passes / safety_total) * 100 if safety_total > 0 else 0
+            )
 
             summary_data = {
                 "Metric": [
@@ -171,6 +219,10 @@ class ExcelExporter(BaseExporter):
                     "Failed Validations",
                     "Average Overall Score",
                     "Average ML-Readiness Score",
+                    "Average QED Score",
+                    "Average SA Score",
+                    "Lipinski Pass Rate (%)",
+                    "Safety Pass Rate (%)",
                 ],
                 "Value": [
                     total_count,
@@ -178,6 +230,10 @@ class ExcelExporter(BaseExporter):
                     total_count - successful_count,
                     f"{avg_score:.2f}",
                     f"{avg_ml_score:.2f}",
+                    f"{avg_qed:.2f}" if qed_scores else "-",
+                    f"{avg_sa:.1f}" if sa_scores else "-",
+                    f"{lipinski_pass_rate:.1f}" if lipinski_total > 0 else "-",
+                    f"{safety_pass_rate:.1f}" if safety_total > 0 else "-",
                 ],
             }
 

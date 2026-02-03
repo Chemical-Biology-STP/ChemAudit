@@ -120,9 +120,9 @@ export function AboutPage() {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-          {/* What is ChemVault - Large card spanning 8 columns */}
+          {/* What is ChemAudit - Large card spanning 8 columns */}
           <AnimatedCard className="lg:col-span-8" delay={0.1}>
-            <WhatIsChemVault />
+            <WhatIsChemAudit />
           </AnimatedCard>
 
           {/* Research Group - Tall card spanning 4 columns, 2 rows */}
@@ -176,7 +176,7 @@ export function AboutPage() {
             </span>
           </div>
           <p className="text-xs text-[var(--color-text-muted)]">
-            ChemVault is open-source software released under the{' '}
+            ChemAudit is open-source software released under the{' '}
             <a
               href="https://opensource.org/licenses/MIT"
               target="_blank"
@@ -351,7 +351,7 @@ function HeroSection() {
           }}
         />
         <div className="relative w-28 h-28 rounded-3xl overflow-hidden shadow-2xl border-2 border-white/20">
-          <img src="/logo.png" alt="ChemVault Logo" className="w-full h-full object-contain" />
+          <img src="/logo.png" alt="ChemAudit Logo" className="w-full h-full object-contain" />
         </div>
       </motion.div>
 
@@ -363,7 +363,7 @@ function HeroSection() {
         transition={{ delay: 0.2, duration: 0.6 }}
       >
         <span className="text-[var(--color-text-primary)]">
-          About <span className="font-extrabold text-[var(--color-primary)]">Chem</span>Vault
+          About <span className="font-extrabold text-[var(--color-primary)]">Chem</span>Audit
         </span>
       </motion.h1>
 
@@ -393,7 +393,7 @@ function HeroSection() {
 // SECTION HEADER
 // ============================================================================
 
-function SectionHeader({ icon, title, isChemVault }: { icon: React.ReactNode; title: string; isChemVault?: boolean }) {
+function SectionHeader({ icon, title, isChemAudit }: { icon: React.ReactNode; title: string; isChemAudit?: boolean }) {
   return (
     <div className="flex items-center gap-3 mb-5">
       <motion.div
@@ -409,8 +409,8 @@ function SectionHeader({ icon, title, isChemVault }: { icon: React.ReactNode; ti
         {icon}
       </motion.div>
       <h2 className="text-xl font-bold text-[var(--color-text-primary)] font-display">
-        {isChemVault ? (
-          <>What is <span className="font-extrabold text-[var(--color-primary)]">Chem</span>Vault?</>
+        {isChemAudit ? (
+          <>What is <span className="font-extrabold text-[var(--color-primary)]">Chem</span>Audit?</>
         ) : (
           title
         )}
@@ -420,10 +420,10 @@ function SectionHeader({ icon, title, isChemVault }: { icon: React.ReactNode; ti
 }
 
 // ============================================================================
-// WHAT IS CHEMVAULT
+// WHAT IS CHEMAUDIT
 // ============================================================================
 
-function WhatIsChemVault() {
+function WhatIsChemAudit() {
   const features = [
     { icon: <Shield className="w-4 h-4" />, title: '15+ Validation Checks', desc: 'Comprehensive analysis' },
     { icon: <Zap className="w-4 h-4" />, title: 'ChEMBL Standardization', desc: 'Trusted pipeline' },
@@ -435,17 +435,17 @@ function WhatIsChemVault() {
 
   return (
     <>
-      <SectionHeader icon={<TestTube className="w-5 h-5" />} title="What is ChemVault?" isChemVault />
+      <SectionHeader icon={<TestTube className="w-5 h-5" />} title="What is ChemAudit?" isChemAudit />
       <div className="space-y-4 text-[var(--color-text-secondary)]">
         <p className="leading-relaxed">
-          ChemVault is an open-source platform designed to validate, standardize, and assess
+          ChemAudit is an open-source platform designed to validate, standardize, and assess
           the quality of chemical structures. It provides researchers and data scientists with
           powerful tools to ensure their molecular data is accurate and ready for downstream
           applications.
         </p>
         <p className="leading-relaxed">
           Whether you're preparing datasets for machine learning, curating compound libraries,
-          or validating structures for publication, ChemVault offers a comprehensive suite of
+          or validating structures for publication, ChemAudit offers a comprehensive suite of
           validation checks, standardization pipelines, and quality scoring metrics.
         </p>
 
@@ -634,9 +634,9 @@ function ConnectSection() {
   const links = [
     {
       icon: <Github className="w-5 h-5" />,
-      title: 'ChemVault',
+      title: 'ChemAudit',
       description: 'Source Code on GitHub',
-      href: 'https://github.com/Kohulan/ChemVault',
+      href: 'https://github.com/Kohulan/ChemAudit',
       color: 'from-gray-600 to-gray-800',
       hoverColor: 'hover:border-gray-500/50',
     },
@@ -670,7 +670,7 @@ function ConnectSection() {
     <>
       <SectionHeader icon={<Zap className="w-5 h-5" />} title="Connect With Us" />
       <p className="text-[var(--color-text-secondary)] mb-5">
-        ChemVault is open-source software. Contributions, bug reports, and feature requests are welcome!
+        ChemAudit is open-source software. Contributions, bug reports, and feature requests are welcome!
       </p>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {links.map((link, i) => (
@@ -916,7 +916,7 @@ function AdvancedScoring() {
     <>
       <SectionHeader icon={<FlaskConical className="w-5 h-5" />} title="Advanced Molecular Scoring" />
       <p className="text-[var(--color-text-secondary)] mb-6">
-        ChemVault provides comprehensive molecular assessment through six specialized scoring modules,
+        ChemAudit provides comprehensive molecular assessment through six specialized scoring modules,
         implementing industry-standard rules from Pfizer, GSK, Abbott, and academic research to evaluate
         compounds for drug discovery and ML applications.
       </p>
@@ -1052,7 +1052,7 @@ function Acknowledgments() {
     <>
       <SectionHeader icon={<Heart className="w-5 h-5 text-red-500" />} title="Acknowledgments" />
       <p className="text-[var(--color-text-secondary)] mb-6">
-        ChemVault is built upon the shoulders of giants. We gratefully acknowledge these
+        ChemAudit is built upon the shoulders of giants. We gratefully acknowledge these
         amazing open-source projects and communities:
       </p>
 

@@ -1,7 +1,7 @@
 """
-Custom exceptions and exception handlers for ChemVault.
+Custom exceptions and exception handlers for ChemAudit.
 
-All application exceptions inherit from ChemVaultException and
+All application exceptions inherit from ChemAuditException and
 return structured JSON responses.
 """
 
@@ -11,8 +11,8 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 
 
-class ChemVaultException(Exception):
-    """Base exception for ChemVault application."""
+class ChemAuditException(Exception):
+    """Base exception for ChemAudit application."""
 
     def __init__(
         self,
@@ -26,7 +26,7 @@ class ChemVaultException(Exception):
         super().__init__(self.message)
 
 
-class ParseError(ChemVaultException):
+class ParseError(ChemAuditException):
     """Exception raised when molecule parsing fails."""
 
     def __init__(
@@ -39,7 +39,7 @@ class ParseError(ChemVaultException):
         )
 
 
-class ValidationError(ChemVaultException):
+class ValidationError(ChemAuditException):
     """Exception raised when molecule validation fails."""
 
     def __init__(self, message: str = "Validation failed", details: dict | None = None):
@@ -50,7 +50,7 @@ class ValidationError(ChemVaultException):
         )
 
 
-class NotFoundError(ChemVaultException):
+class NotFoundError(ChemAuditException):
     """Exception raised when requested resource is not found."""
 
     def __init__(
@@ -63,10 +63,10 @@ class NotFoundError(ChemVaultException):
         )
 
 
-async def chemvault_exception_handler(
-    request: Request, exc: ChemVaultException
+async def chemaudit_exception_handler(
+    request: Request, exc: ChemAuditException
 ) -> JSONResponse:
-    """Handle ChemVault exceptions by returning structured JSON."""
+    """Handle ChemAudit exceptions by returning structured JSON."""
     return JSONResponse(
         status_code=exc.status_code,
         content={

@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis } from 'recharts';
 import { CalculationTooltip } from '../ui/Tooltip';
 import { cn } from '../../lib/utils';
@@ -16,6 +17,24 @@ interface ScoreGaugeProps {
  */
 export function ScoreGauge({ score, size = 140, className = '', showCalculation = true }: ScoreGaugeProps) {
   const { isDark } = useThemeContext();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isReady, setIsReady] = useState(false);
+
+  // Delay chart render until container has valid dimensions
+  useEffect(() => {
+    const checkDimensions = () => {
+      if (containerRef.current) {
+        const { offsetWidth, offsetHeight } = containerRef.current;
+        if (offsetWidth > 0 && offsetHeight > 0) {
+          setIsReady(true);
+        }
+      }
+    };
+    
+    checkDimensions();
+    const timer = setTimeout(checkDimensions, 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Clamp score to 0-100
   const clampedScore = Math.max(0, Math.min(100, score));
@@ -70,7 +89,7 @@ Clamped to range 0-100`;
   }
 
   const chartContent = (
-    <div className={cn('relative', className)} style={{ width: size, height: size }}>
+    <div ref={containerRef} className={cn('relative', className)} style={{ width: size, height: size }}>
       {/* SVG Gradient Definitions */}
       <svg width="0" height="0" className="absolute">
         <defs>
@@ -89,31 +108,33 @@ Clamped to range 0-100`;
         </defs>
       </svg>
 
-      {/* Chart */}
-      <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-        <RadialBarChart
-          innerRadius="65%"
-          outerRadius="100%"
-          data={data}
-          startAngle={90}
-          endAngle={-270}
-          barSize={12}
-        >
-          <PolarAngleAxis
-            type="number"
-            domain={[0, 100]}
-            angleAxisId={0}
-            tick={false}
-          />
-          <RadialBar
-            background={{ fill: backgroundFill }}
-            dataKey="value"
-            cornerRadius={10}
-            animationDuration={1000}
-            animationEasing="ease-out"
-          />
-        </RadialBarChart>
-      </ResponsiveContainer>
+      {/* Chart - only render when container has valid dimensions */}
+      {isReady && (
+        <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
+          <RadialBarChart
+            innerRadius="65%"
+            outerRadius="100%"
+            data={data}
+            startAngle={90}
+            endAngle={-270}
+            barSize={12}
+          >
+            <PolarAngleAxis
+              type="number"
+              domain={[0, 100]}
+              angleAxisId={0}
+              tick={false}
+            />
+            <RadialBar
+              background={{ fill: backgroundFill }}
+              dataKey="value"
+              cornerRadius={10}
+              animationDuration={1000}
+              animationEasing="ease-out"
+            />
+          </RadialBarChart>
+        </ResponsiveContainer>
+      )}
 
       {/* Score text in center */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">

@@ -165,6 +165,68 @@ class PDFReportGenerator(BaseExporter):
         ]
         avg_ml_readiness_score = sum(ml_scores) / len(ml_scores) if ml_scores else None
 
+        # QED scores
+        qed_scores = [
+            r["scoring"]["druglikeness"]["qed_score"]
+            for r in results
+            if r.get("scoring")
+            and r["scoring"].get("druglikeness")
+            and r["scoring"]["druglikeness"].get("qed_score") is not None
+        ]
+        avg_qed_score = (
+            round(sum(qed_scores) / len(qed_scores), 2) if qed_scores else None
+        )
+
+        # SA scores
+        sa_scores = [
+            r["scoring"]["admet"]["sa_score"]
+            for r in results
+            if r.get("scoring")
+            and r["scoring"].get("admet")
+            and r["scoring"]["admet"].get("sa_score") is not None
+        ]
+        avg_sa_score = round(sum(sa_scores) / len(sa_scores), 1) if sa_scores else None
+
+        # Lipinski pass rate
+        lipinski_passes = 0
+        lipinski_total = 0
+        for r in results:
+            if (
+                r.get("scoring")
+                and r["scoring"].get("druglikeness")
+                and "error" not in r["scoring"]["druglikeness"]
+            ):
+                lipinski_passed = r["scoring"]["druglikeness"].get("lipinski_passed")
+                if lipinski_passed is not None:
+                    lipinski_total += 1
+                    if lipinski_passed:
+                        lipinski_passes += 1
+
+        lipinski_pass_rate = (
+            round((lipinski_passes / lipinski_total) * 100, 1)
+            if lipinski_total > 0
+            else None
+        )
+
+        # Safety pass rate
+        safety_passes = 0
+        safety_total = 0
+        for r in results:
+            if (
+                r.get("scoring")
+                and r["scoring"].get("safety_filters")
+                and "error" not in r["scoring"]["safety_filters"]
+            ):
+                all_passed = r["scoring"]["safety_filters"].get("all_passed")
+                if all_passed is not None:
+                    safety_total += 1
+                    if all_passed:
+                        safety_passes += 1
+
+        safety_pass_rate = (
+            round((safety_passes / safety_total) * 100, 1) if safety_total > 0 else None
+        )
+
         # Score distribution
         score_dist = _calculate_score_distribution(validation_scores)
 
@@ -182,6 +244,10 @@ class PDFReportGenerator(BaseExporter):
             "errors": errors,
             "avg_validation_score": avg_validation_score,
             "avg_ml_readiness_score": avg_ml_readiness_score,
+            "avg_qed_score": avg_qed_score,
+            "avg_sa_score": avg_sa_score,
+            "lipinski_pass_rate": lipinski_pass_rate,
+            "safety_pass_rate": safety_pass_rate,
             "score_distribution": score_dist,
             "alert_summary": alert_summary,
             "processing_time_seconds": None,  # Not available in results

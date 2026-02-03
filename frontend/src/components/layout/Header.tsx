@@ -77,17 +77,17 @@ export function Header() {
               >
                 <img
                   src="/logo.png"
-                  alt="ChemVault Logo"
+                  alt="ChemAudit Logo"
                   className="w-full h-full object-contain"
                 />
               </motion.div>
               <div className="hidden sm:block">
                 <h1 className="text-xl font-bold text-[var(--color-text-primary)] tracking-tight font-display">
                   <span className="font-extrabold text-[var(--color-primary)]">Chem</span>
-                  <span className="font-semibold">Vault</span>
+                  <span className="font-semibold">Audit</span>
                 </h1>
                 <p className="text-[10px] text-[var(--color-text-muted)] -mt-0.5 tracking-widest uppercase font-medium">
-                  Structure Validation
+                  Structure Validation Suite
                 </p>
               </div>
             </NavLink>

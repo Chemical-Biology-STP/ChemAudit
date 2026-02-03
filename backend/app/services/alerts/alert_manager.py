@@ -112,24 +112,26 @@ def _get_severity_for_pattern(pattern_name: str, catalog_source: str) -> AlertSe
     return AlertSeverity.WARNING
 
 
-def _extract_matched_atoms(match) -> List[int]:
+def _extract_matched_atoms(entry, mol: Chem.Mol) -> List[int]:
     """
-    Extract matched atom indices from a FilterCatalog match.
+    Extract matched atom indices from a FilterCatalogEntry.
+
+    Uses entry.GetFilterMatches(mol) to get FilterMatch objects,
+    then reads atomPairs where pair[1] is the molecule atom index.
 
     Args:
-        match: FilterMatch object from GetFilterMatches
+        entry: FilterCatalogEntry from catalog.GetMatches()
+        mol: RDKit molecule to match against
 
     Returns:
         List of atom indices involved in the match
     """
     atoms = []
     try:
-        # GetAtomPairs returns list of (query_atom_idx, mol_atom_idx) tuples
-        atom_pairs = match.GetAtomPairs()
-        if atom_pairs:
-            for pair in atom_pairs:
-                if len(pair) >= 2:
-                    atoms.append(int(pair[1]))  # mol atom index
+        filter_matches = entry.GetFilterMatches(mol)
+        for fm in filter_matches:
+            for pair in fm.atomPairs:
+                atoms.append(int(pair[1]))
     except Exception:
         pass
 
@@ -219,8 +221,8 @@ class AlertManager:
                         # Get severity
                         severity = _get_severity_for_pattern(pattern_name, catalog_type)
 
-                        # Get matched atoms
-                        matched_atoms = _extract_matched_atoms(entry)
+                        # Get matched atoms via FilterMatch atom pairs
+                        matched_atoms = _extract_matched_atoms(entry, mol)
 
                         alert = AlertResult(
                             pattern_name=pattern_name,

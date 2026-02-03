@@ -1,5 +1,5 @@
 """
-Standardization services for ChemVault.
+Standardization services for ChemAudit.
 
 Provides ChEMBL-compatible standardization pipeline with:
 - Checker: Detect structure issues before standardization

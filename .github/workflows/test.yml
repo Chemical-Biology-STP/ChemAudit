@@ -42,9 +42,9 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: chemvault
-          POSTGRES_PASSWORD: chemvault
-          POSTGRES_DB: chemvault_test
+          POSTGRES_USER: chemaudit
+          POSTGRES_PASSWORD: chemaudit
+          POSTGRES_DB: chemaudit_test
         ports:
           - 5432:5432
         options: >-
@@ -87,7 +87,7 @@ jobs:
         working-directory: ./backend
         run: pytest tests/ -v --cov=app --cov-report=xml
         env:
-          DATABASE_URL: postgresql+asyncpg://chemvault:chemvault@localhost:5432/chemvault_test
+          DATABASE_URL: postgresql+asyncpg://chemaudit:chemaudit@localhost:5432/chemaudit_test
           REDIS_URL: redis://localhost:6379/0
 
       - name: Upload coverage to Codecov

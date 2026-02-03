@@ -1,5 +1,5 @@
 """
-Configuration management for ChemVault backend.
+Configuration management for ChemAudit backend.
 
 Uses pydantic-settings for environment variable management.
 """
@@ -14,13 +14,13 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # App metadata
-    APP_NAME: str = "ChemVault"
+    APP_NAME: str = "ChemAudit"
     APP_VERSION: str = "0.1.0"
     DEBUG: bool = False
 
     # Database
     DATABASE_URL: str = (
-        "postgresql+asyncpg://chemvault:chemvault@localhost:5432/chemvault"
+        "postgresql+asyncpg://chemaudit:chemaudit@localhost:5432/chemaudit"
     )
 
     # Redis

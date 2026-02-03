@@ -51,6 +51,9 @@ class BatchResultItem(BaseModel):
     scoring: Optional[Dict[str, Any]] = Field(
         None, description="ML-readiness scoring results"
     )
+    standardization: Optional[Dict[str, Any]] = Field(
+        None, description="ChEMBL standardization pipeline results"
+    )
 
 
 class BatchStatistics(BaseModel):
@@ -65,12 +68,28 @@ class BatchStatistics(BaseModel):
     avg_ml_readiness_score: Optional[float] = Field(
         None, description="Average ML-readiness score"
     )
+    avg_qed_score: Optional[float] = Field(
+        None, description="Average QED (Quantitative Estimate of Drug-likeness) score"
+    )
+    avg_sa_score: Optional[float] = Field(
+        None, description="Average SA (Synthetic Accessibility) score"
+    )
+    lipinski_pass_rate: Optional[float] = Field(
+        None, description="Percentage of molecules passing Lipinski's Rule of Five"
+    )
+    safety_pass_rate: Optional[float] = Field(
+        None, description="Percentage of molecules passing all safety filters"
+    )
     score_distribution: Dict[str, int] = Field(
         default_factory=dict,
         description="Score distribution buckets (excellent, good, moderate, poor)",
     )
     alert_summary: Dict[str, int] = Field(
         default_factory=dict, description="Alert counts by catalog type"
+    )
+    issue_summary: Dict[str, int] = Field(
+        default_factory=dict,
+        description="Failed validation issue counts by check name",
     )
     processing_time_seconds: Optional[float] = Field(
         None, description="Total processing time in seconds"

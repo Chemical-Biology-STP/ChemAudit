@@ -1,7 +1,7 @@
 """
-ChemVault API Client
+ChemAudit API Client
 
-Synchronous Python client for the ChemVault API.
+Synchronous Python client for the ChemAudit API.
 """
 
 import time
@@ -31,9 +31,9 @@ from .exceptions import (
 )
 
 
-class ChemVaultClient:
+class ChemAuditClient:
     """
-    Synchronous client for the ChemVault API.
+    Synchronous client for the ChemAudit API.
 
     This client is intentionally synchronous-only using httpx.Client.
     For async usage, wrap calls with asyncio.to_thread() or use httpx directly.
@@ -45,7 +45,7 @@ class ChemVaultClient:
         max_retries: Maximum retries for rate limit errors (default: 3)
 
     Example:
-        >>> client = ChemVaultClient(api_key="your-key")
+        >>> client = ChemAuditClient(api_key="your-key")
         >>> result = client.validate("CCO")
         >>> print(result.overall_score)
     """

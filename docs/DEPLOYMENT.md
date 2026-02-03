@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="ChemVault" width="80" />
+<img src="assets/logo.png" alt="ChemAudit" width="80" />
 
 # Deployment Guide
 
-### Production Deployment for ChemVault
+### Production Deployment for ChemAudit
 
 [![Docker](https://img.shields.io/badge/Docker-24.0+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Nginx](https://img.shields.io/badge/Nginx-1.25+-009639?logo=nginx&logoColor=white)](https://nginx.org/)
@@ -78,7 +78,7 @@
 
 ## 🎛️ Deployment Profiles
 
-ChemVault includes pre-configured deployment profiles to match your workload requirements. Each profile configures batch limits, worker counts, and memory allocation.
+ChemAudit includes pre-configured deployment profiles to match your workload requirements. Each profile configures batch limits, worker counts, and memory allocation.
 
 ### Available Profiles
 
@@ -133,7 +133,7 @@ curl http://localhost:8000/api/v1/config
 
 ```json
 {
-  "app_name": "ChemVault",
+  "app_name": "ChemAudit",
   "app_version": "0.1.0",
   "deployment_profile": "large",
   "limits": {
@@ -164,8 +164,8 @@ For local testing of production build:
 
 ```bash
 # 1️⃣ Clone and enter directory
-git clone https://github.com/yourusername/chemvault.git
-cd chemvault
+git clone https://github.com/yourusername/chemaudit.git
+cd chemaudit
 
 # 2️⃣ Configure environment
 cp .env.prod.example .env
@@ -240,10 +240,10 @@ openssl rand -base64 32  # Use for GRAFANA_PASSWORD
 
 ```env
 # Database
-POSTGRES_USER=chemvault
+POSTGRES_USER=chemaudit
 POSTGRES_PASSWORD=your_secure_password_here
-POSTGRES_DB=chemvault
-DATABASE_URL=postgresql+asyncpg://chemvault:your_secure_password_here@postgres:5432/chemvault
+POSTGRES_DB=chemaudit
+DATABASE_URL=postgresql+asyncpg://chemaudit:your_secure_password_here@postgres:5432/chemaudit
 
 # Redis
 REDIS_URL=redis://redis:6379
@@ -408,11 +408,11 @@ docker-compose -f docker-compose.prod.yml logs --tail=100 backend
 ```bash
 # Create backup
 docker-compose -f docker-compose.prod.yml exec postgres \
-  pg_dump -U chemvault chemvault > backup_$(date +%Y%m%d).sql
+  pg_dump -U chemaudit chemaudit > backup_$(date +%Y%m%d).sql
 
 # Restore backup
 cat backup_20260129.sql | docker-compose -f docker-compose.prod.yml exec -T postgres \
-  psql -U chemvault chemvault
+  psql -U chemaudit chemaudit
 ```
 
 ### Updating Application
@@ -523,7 +523,7 @@ docker-compose -f docker-compose.prod.yml ps
 docker-compose -f docker-compose.prod.yml logs backend
 
 # Check health status
-docker inspect chemvault-backend-prod | grep -A 10 Health
+docker inspect chemaudit-backend-prod | grep -A 10 Health
 ```
 
 </details>
@@ -616,6 +616,6 @@ For production at scale, consider:
 
 <div align="center">
 
-**Need help?** [Open an Issue](https://github.com/yourusername/chemvault/issues)
+**Need help?** [Open an Issue](https://github.com/yourusername/chemaudit/issues)
 
 </div>

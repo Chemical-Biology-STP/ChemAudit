@@ -145,6 +145,7 @@ function ChEMBLAlertsSection({ chembl }: { chembl: ChEMBLAlertsResult }) {
           )}
           <span className="text-sm font-medium text-[var(--color-text-primary)]">ChEMBL Alerts</span>
           <InfoTooltip
+            asSpan
             title="ChEMBL Structural Alerts"
             content={
               <span className="text-xs">

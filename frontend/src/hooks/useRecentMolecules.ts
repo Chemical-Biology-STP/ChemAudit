@@ -8,7 +8,7 @@ export interface RecentMolecule {
 }
 
 const MAX_RECENT_MOLECULES = 50;
-const STORAGE_KEY = 'chemvault-recent-molecules';
+const STORAGE_KEY = 'chemaudit-recent-molecules';
 
 /**
  * Hook for managing recently validated molecules.

@@ -33,6 +33,7 @@ export interface BatchResult {
       passed: boolean;
       severity: string;
       message: string;
+      affected_atoms?: number[];
     }>;
     error?: string;
   } | null;
@@ -43,6 +44,7 @@ export interface BatchResult {
       catalog: string;
       rule_name: string;
       severity: string;
+      matched_atoms?: number[];
     }>;
     error?: string;
   } | null;
@@ -61,6 +63,9 @@ export interface BatchResult {
       total_alerts: number;
       pains_passed: boolean;
       brenk_passed: boolean;
+      nih_passed?: boolean;
+      zinc_passed?: boolean;
+      chembl_passed?: boolean;
     };
     admet?: {
       sa_score: number;
@@ -69,6 +74,19 @@ export interface BatchResult {
       fsp3: number;
     };
     error?: string;
+  } | null;
+  standardization: {
+    standardized_smiles: string | null;
+    success: boolean;
+    error: string | null;
+    steps_applied: Array<{
+      step_name: string;
+      applied: boolean;
+      description: string;
+      changes: string;
+    }>;
+    excluded_fragments: string[];
+    changed: boolean;
   } | null;
 }
 
@@ -81,10 +99,10 @@ export interface BatchStatistics {
   errors: number;
   avg_validation_score: number | null;
   avg_ml_readiness_score: number | null;
-  avg_qed_score?: number | null;
-  avg_sa_score?: number | null;
-  lipinski_pass_rate?: number | null;
-  safety_pass_rate?: number | null;
+  avg_qed_score: number | null;
+  avg_sa_score: number | null;
+  lipinski_pass_rate: number | null;
+  safety_pass_rate: number | null;
   score_distribution: {
     excellent: number;
     good: number;
@@ -92,6 +110,7 @@ export interface BatchStatistics {
     poor: number;
   };
   alert_summary: Record<string, number>;
+  issue_summary: Record<string, number>;
   processing_time_seconds: number | null;
 }
 
@@ -134,10 +153,14 @@ export interface CSVColumnsResponse {
 /**
  * Filters for results query
  */
+export type SortField = 'index' | 'name' | 'smiles' | 'score' | 'qed' | 'safety' | 'status' | 'issues';
+
 export interface BatchResultsFilters {
   status_filter?: 'success' | 'error';
   min_score?: number;
   max_score?: number;
+  sort_by?: SortField;
+  sort_dir?: 'asc' | 'desc';
 }
 
 /**

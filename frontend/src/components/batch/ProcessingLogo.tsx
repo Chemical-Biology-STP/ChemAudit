@@ -108,7 +108,7 @@ export const ProcessingLogo = memo(function ProcessingLogo({
         {/* Logo image */}
         <img
           src="/logo.png"
-          alt="ChemVault"
+          alt="ChemAudit"
           className="w-full h-full object-cover"
         />
       </div>

@@ -21,6 +21,7 @@ from app.services.scoring.admet import calculate_admet
 from app.services.scoring.druglikeness import calculate_druglikeness
 from app.services.scoring.ml_readiness import calculate_ml_readiness
 from app.services.scoring.safety_filters import calculate_safety_filters
+from app.services.standardization import standardize_molecule
 from app.services.validation.engine import validation_engine
 
 CHUNK_SIZE = 100  # Process 100 molecules per chunk for progress updates
@@ -88,6 +89,7 @@ def validate_single_molecule(
                             else str(r.severity)
                         ),
                         "message": r.message,
+                        "affected_atoms": r.affected_atoms,
                     }
                     for r in check_results
                     if not r.passed
@@ -111,6 +113,7 @@ def validate_single_molecule(
                             if hasattr(a.severity, "value")
                             else str(a.severity)
                         ),
+                        "matched_atoms": a.matched_atoms,
                     }
                     for a in alert_result.alerts
                 ],
@@ -153,6 +156,7 @@ def process_molecule_chunk(
     molecules: List[Dict[str, Any]],
     total_molecules: int,
     total_chunks: int,
+    safety_options: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
     """
     Process a chunk of molecules with progress updates.
@@ -163,6 +167,7 @@ def process_molecule_chunk(
         molecules: List of molecule data dicts (smiles, name, index, properties)
         total_molecules: Total molecules in the entire batch
         total_chunks: Total number of chunks
+        safety_options: Optional safety screening options
 
     Returns:
         List of result dictionaries for each molecule
@@ -170,7 +175,7 @@ def process_molecule_chunk(
     results = []
 
     for mol_data in molecules:
-        result = _process_single_molecule(mol_data)
+        result = _process_single_molecule(mol_data, safety_options=safety_options)
         results.append(result)
 
         # Atomically increment counter and update progress
@@ -185,12 +190,16 @@ def process_molecule_chunk(
     return results
 
 
-def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
+def _process_single_molecule(
+    mol_data: Dict[str, Any],
+    safety_options: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """
     Process a single molecule through validation, alerts, and scoring.
 
     Args:
         mol_data: Dictionary with smiles, name, index, properties, and optional parse_error
+        safety_options: Optional dict with include_extended and include_chembl flags
 
     Returns:
         Result dictionary with all validation results or error info
@@ -204,6 +213,7 @@ def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
         "validation": None,
         "alerts": None,
         "scoring": None,
+        "standardization": None,
     }
 
     # Check for pre-existing parse error from file parsing
@@ -223,6 +233,34 @@ def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
             result["error"] = "Failed to parse SMILES"
             return result
 
+        # Run standardization if enabled
+        opts = safety_options or {}
+        if opts.get("include_standardization"):
+            try:
+                std_result = standardize_molecule(mol)
+                result["standardization"] = {
+                    "standardized_smiles": std_result.standardized_smiles,
+                    "success": std_result.success,
+                    "error": std_result.error_message,
+                    "steps_applied": [
+                        {
+                            "step_name": s.step_name,
+                            "applied": s.applied,
+                            "description": s.description,
+                            "changes": s.changes,
+                        }
+                        for s in std_result.steps_applied
+                        if s.applied
+                    ],
+                    "excluded_fragments": std_result.excluded_fragments,
+                    "changed": (
+                        std_result.standardized_smiles is not None
+                        and std_result.standardized_smiles != smiles
+                    ),
+                }
+            except Exception as e:
+                result["standardization"] = {"error": str(e)}
+
         # Run validation
         try:
             check_results, validation_score = validation_engine.validate(mol)
@@ -238,6 +276,7 @@ def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
                             else str(r.severity)
                         ),
                         "message": r.message,
+                        "affected_atoms": r.affected_atoms,
                     }
                     for r in check_results
                     if not r.passed
@@ -248,7 +287,23 @@ def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
 
         # Run structural alerts screening
         try:
-            alert_result = alert_manager.screen(mol, catalogs=["PAINS", "BRENK"])
+            opts = safety_options or {}
+            catalogs = ["PAINS", "BRENK"]
+            if opts.get("include_extended"):
+                catalogs.extend(["NIH", "ZINC"])
+            if opts.get("include_chembl"):
+                catalogs.extend(
+                    [
+                        "CHEMBL_BMS",
+                        "CHEMBL_DUNDEE",
+                        "CHEMBL_GLAXO",
+                        "CHEMBL_INPHARMATICA",
+                        "CHEMBL_LINT",
+                        "CHEMBL_MLSMR",
+                        "CHEMBL_SURECHEMBL",
+                    ]
+                )
+            alert_result = alert_manager.screen(mol, catalogs=catalogs)
             result["alerts"] = {
                 "has_alerts": alert_result.total_alerts > 0,
                 "alert_count": alert_result.total_alerts,
@@ -261,6 +316,7 @@ def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
                             if hasattr(a.severity, "value")
                             else str(a.severity)
                         ),
+                        "matched_atoms": a.matched_atoms,
                     }
                     for a in alert_result.alerts
                 ],
@@ -295,13 +351,25 @@ def _process_single_molecule(mol_data: Dict[str, Any]) -> Dict[str, Any]:
 
         # Calculate safety filters
         try:
-            sf_result = calculate_safety_filters(mol, include_extended=False)
-            result["scoring"]["safety_filters"] = {
+            opts = safety_options or {}
+            sf_result = calculate_safety_filters(
+                mol,
+                include_extended=opts.get("include_extended", False),
+                include_chembl=opts.get("include_chembl", False),
+            )
+            sf_data: Dict[str, Any] = {
                 "all_passed": sf_result.all_passed,
                 "total_alerts": sf_result.total_alerts,
                 "pains_passed": sf_result.pains.passed,
                 "brenk_passed": sf_result.brenk.passed,
             }
+            if sf_result.nih is not None:
+                sf_data["nih_passed"] = sf_result.nih.passed
+            if sf_result.zinc is not None:
+                sf_data["zinc_passed"] = sf_result.zinc.passed
+            if sf_result.chembl is not None:
+                sf_data["chembl_passed"] = sf_result.chembl.passed
+            result["scoring"]["safety_filters"] = sf_data
         except Exception as e:
             if "scoring" not in result or result["scoring"] is None:
                 result["scoring"] = {}
@@ -384,12 +452,13 @@ def process_molecule_chunk_priority(
     molecules: List[Dict[str, Any]],
     total_molecules: int,
     total_chunks: int,
+    safety_options: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
     """Priority queue version of process_molecule_chunk for small jobs."""
     results = []
 
     for mol_data in molecules:
-        result = _process_single_molecule(mol_data)
+        result = _process_single_molecule(mol_data, safety_options=safety_options)
         results.append(result)
 
         # Atomically increment counter and update progress
@@ -427,7 +496,11 @@ def aggregate_batch_results_priority(
     }
 
 
-def process_batch_job(job_id: str, molecules: List[Dict[str, Any]]) -> str:
+def process_batch_job(
+    job_id: str,
+    molecules: List[Dict[str, Any]],
+    safety_options: Optional[Dict[str, Any]] = None,
+) -> str:
     """
     Start batch processing job using Celery chord pattern.
 
@@ -437,6 +510,7 @@ def process_batch_job(job_id: str, molecules: List[Dict[str, Any]]) -> str:
     Args:
         job_id: Unique job identifier
         molecules: List of molecule data dicts from file parsing
+        safety_options: Optional safety screening options
 
     Returns:
         job_id for tracking
@@ -493,6 +567,7 @@ def process_batch_job(job_id: str, molecules: List[Dict[str, Any]]) -> str:
             molecules=chunk,
             total_molecules=total_molecules,
             total_chunks=total_chunks,
+            safety_options=safety_options,
         )
         for idx, chunk in enumerate(chunks)
     )

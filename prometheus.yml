@@ -1,4 +1,4 @@
-# Prometheus configuration for ChemVault monitoring
+# Prometheus configuration for ChemAudit monitoring
 # Scrapes metrics from the FastAPI backend at /metrics endpoint
 
 global:
@@ -24,12 +24,12 @@ scrape_configs:
     metrics_path: /metrics
     scheme: http
 
-  # ChemVault Backend API
-  - job_name: "chemvault-backend"
+  # ChemAudit Backend API
+  - job_name: "chemaudit-backend"
     static_configs:
       - targets: ["backend:8000"]
         labels:
-          service: "chemvault"
+          service: "chemaudit"
           component: "api"
     metrics_path: /metrics
     scheme: http

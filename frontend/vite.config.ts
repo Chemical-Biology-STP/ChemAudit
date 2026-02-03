@@ -13,6 +13,13 @@ export default defineConfig(({ mode }) => {
     ? allowedHostsStr.split(',').map(h => h.trim())
     : true  // Allow all hosts if not specified (safe for dev server)
 
+  // Determine backend URL: use VITE_BACKEND_URL if set, otherwise construct from host/port
+  // In Docker: VITE_BACKEND_URL=http://backend:8000
+  // Local dev: defaults to http://127.0.0.1:8001
+  const backendUrl = process.env.VITE_BACKEND_URL || 
+    env.VITE_BACKEND_URL || 
+    `http://127.0.0.1:${env.VITE_BACKEND_PORT || '8001'}`
+
   return {
     plugins: [react()],
     server: {
@@ -21,8 +28,9 @@ export default defineConfig(({ mode }) => {
       allowedHosts,
       proxy: {
         '/api': {
-          target: 'http://backend:8000',
+          target: backendUrl,
           changeOrigin: true,
+          secure: false,
         },
       },
     },

@@ -204,44 +204,63 @@ export function Tooltip({
 
 /**
  * Info icon with tooltip - clearly visible information indicator
+ * Use asSpan={true} when placing inside buttons or other interactive elements
  */
 export function InfoTooltip({
   content,
   title,
   position = 'top',
   size = 'default',
+  asSpan = false,
 }: {
   content: ReactNode;
   title?: string;
   position?: 'top' | 'bottom' | 'left' | 'right';
   size?: 'small' | 'default';
+  asSpan?: boolean;
 }) {
   const isSmall = size === 'small';
+  
+  const className = cn(
+    'inline-flex items-center justify-center rounded-full',
+    'border border-[var(--color-text-muted)]/40',
+    'bg-[var(--color-surface-sunken)]',
+    'text-[var(--color-text-secondary)]',
+    'hover:bg-[var(--color-primary)]/10',
+    'hover:border-[var(--color-primary)]/50',
+    'hover:text-[var(--color-primary)]',
+    'transition-all duration-200 cursor-help',
+    isSmall ? 'w-4 h-4' : 'w-[18px] h-[18px]'
+  );
+
+  const innerContent = (
+    <span className={cn(
+      'font-semibold leading-none',
+      isSmall ? 'text-[9px]' : 'text-[11px]'
+    )}>
+      i
+    </span>
+  );
 
   return (
     <Tooltip content={content} title={title} position={position} maxWidth={280}>
-      <button
-        type="button"
-        aria-label="More information"
-        className={cn(
-          'inline-flex items-center justify-center rounded-full',
-          'border border-[var(--color-text-muted)]/40',
-          'bg-[var(--color-surface-sunken)]',
-          'text-[var(--color-text-secondary)]',
-          'hover:bg-[var(--color-primary)]/10',
-          'hover:border-[var(--color-primary)]/50',
-          'hover:text-[var(--color-primary)]',
-          'transition-all duration-200 cursor-help',
-          isSmall ? 'w-4 h-4' : 'w-[18px] h-[18px]'
-        )}
-      >
-        <span className={cn(
-          'font-semibold leading-none',
-          isSmall ? 'text-[9px]' : 'text-[11px]'
-        )}>
-          i
+      {asSpan ? (
+        <span
+          role="img"
+          aria-label="More information"
+          className={className}
+        >
+          {innerContent}
         </span>
-      </button>
+      ) : (
+        <button
+          type="button"
+          aria-label="More information"
+          className={className}
+        >
+          {innerContent}
+        </button>
+      )}
     </Tooltip>
   );
 }

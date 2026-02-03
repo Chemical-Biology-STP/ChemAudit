@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
-import { Upload, X, FileSpreadsheet, Database, ChevronDown, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Upload, X, FileSpreadsheet, Database, ChevronDown, AlertCircle, CheckCircle2, Shield, FlaskConical } from 'lucide-react';
 import { batchApi } from '../../services/api';
 import { useLimits } from '../../context/ConfigContext';
 import { ClayButton } from '../ui/ClayButton';
@@ -45,6 +45,9 @@ export function BatchUpload({
   const [csvColumns, setCsvColumns] = useState<CSVColumnsResponse | null>(null);
   const [selectedSmilesColumn, setSelectedSmilesColumn] = useState<string>('');
   const [selectedNameColumn, setSelectedNameColumn] = useState<string>('');
+  const [includeExtendedSafety, setIncludeExtendedSafety] = useState(false);
+  const [includeChemblAlerts, setIncludeChemblAlerts] = useState(false);
+  const [includeStandardization, setIncludeStandardization] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -185,7 +188,12 @@ export function BatchUpload({
         fileToUpload,
         csvColumns ? smilesColForUpload : undefined,
         csvColumns && nameColForUpload ? nameColForUpload : undefined,
-        (progress) => setUploadProgress(progress)
+        (progress) => setUploadProgress(progress),
+        {
+          includeExtended: includeExtendedSafety,
+          includeChembl: includeChemblAlerts,
+          includeStandardization: includeStandardization,
+        }
       );
       onUploadSuccess(response.job_id, response.total_molecules);
     } catch (e: any) {
@@ -429,6 +437,94 @@ export function BatchUpload({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Standardization option */}
+      {selectedFile && !isAnalyzing && (
+        <div className="bg-[var(--color-surface-elevated)] rounded-xl border border-[var(--color-border)] overflow-hidden">
+          <div className="p-4 border-b border-[var(--color-border)] bg-[var(--color-surface-sunken)]/50">
+            <div className="flex items-center gap-2">
+              <FlaskConical className="w-4 h-4 text-[var(--color-primary)]" />
+              <p className="text-sm font-medium text-[var(--color-text-primary)]">Standardization</p>
+            </div>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">
+              Optionally run the ChEMBL standardization pipeline on each molecule before validation.
+            </p>
+          </div>
+          <div className="p-4">
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={includeStandardization}
+                onChange={(e) => setIncludeStandardization(e.target.checked)}
+                disabled={isUploading}
+                className="mt-1 h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+              />
+              <div>
+                <p className="text-sm font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors">
+                  Enable ChEMBL Standardization
+                </p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                  Normalizes structures using the ChEMBL pipeline: fixes nitro groups, removes salts and solvents, standardizes charge states, and extracts the parent molecule. Results will show the standardized SMILES alongside the original.
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* Safety screening options */}
+      {selectedFile && !isAnalyzing && (
+        <div className="bg-[var(--color-surface-elevated)] rounded-xl border border-[var(--color-border)] overflow-hidden">
+          <div className="p-4 border-b border-[var(--color-border)] bg-[var(--color-surface-sunken)]/50">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-[var(--color-primary)]" />
+              <p className="text-sm font-medium text-[var(--color-text-primary)]">Safety Screening</p>
+            </div>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">
+              All molecules are screened against PAINS and Brenk filters by default. Enable additional filters below for more comprehensive screening.
+            </p>
+          </div>
+          <div className="p-4 space-y-3">
+            {/* Extended safety (NIH + ZINC) */}
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={includeExtendedSafety}
+                onChange={(e) => setIncludeExtendedSafety(e.target.checked)}
+                disabled={isUploading}
+                className="mt-1 h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+              />
+              <div>
+                <p className="text-sm font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors">
+                  Extended Filters (NIH + ZINC)
+                </p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                  NIH/NCGC alerts flag compounds that interfere with high-throughput screening assays. ZINC filters identify reactive or unstable functional groups. Recommended for HTS compound libraries.
+                </p>
+              </div>
+            </label>
+
+            {/* ChEMBL alerts */}
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={includeChemblAlerts}
+                onChange={(e) => setIncludeChemblAlerts(e.target.checked)}
+                disabled={isUploading}
+                className="mt-1 h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+              />
+              <div>
+                <p className="text-sm font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors">
+                  ChEMBL Pharma Alerts (7 filter sets)
+                </p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                  Structural alerts curated by pharmaceutical companies: Bristol-Myers Squibb, Dundee, GlaxoSmithKline, Inpharmatica, Lilly (LINT), MLSMR, and SureChEMBL. These are aggressive filters designed for drug discovery — many flagged compounds may be acceptable outside that context.
+                </p>
+              </div>
+            </label>
+          </div>
         </div>
       )}
 

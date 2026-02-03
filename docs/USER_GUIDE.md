@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="ChemVault" width="80" />
+<img src="assets/logo.png" alt="ChemAudit" width="80" />
 
 # User Guide
 
-### Complete Guide to ChemVault Features
+### Complete Guide to ChemAudit Features
 
 </div>
 

@@ -1,5 +1,5 @@
 """
-Profiling utilities for ChemVault backend.
+Profiling utilities for ChemAudit backend.
 
 Contains scripts and utilities for profiling validation performance.
 """

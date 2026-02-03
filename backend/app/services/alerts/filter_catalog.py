@@ -67,6 +67,48 @@ AVAILABLE_CATALOGS: Dict[str, Dict[str, str]] = {
         "pattern_count": "variable",
         "severity": "warning",
     },
+    "CHEMBL_BMS": {
+        "name": "ChEMBL BMS Alerts",
+        "description": "Bristol-Myers Squibb HTS deck filters",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
+    "CHEMBL_DUNDEE": {
+        "name": "ChEMBL Dundee Alerts",
+        "description": "University of Dundee NTD screening filters",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
+    "CHEMBL_GLAXO": {
+        "name": "ChEMBL Glaxo Alerts",
+        "description": "GlaxoSmithKline hard and undesirable compound filters",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
+    "CHEMBL_INPHARMATICA": {
+        "name": "ChEMBL Inpharmatica Alerts",
+        "description": "Inpharmatica unwanted fragment filters",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
+    "CHEMBL_LINT": {
+        "name": "ChEMBL LINT Alerts",
+        "description": "Lilly MedChem rules for compound quality",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
+    "CHEMBL_MLSMR": {
+        "name": "ChEMBL MLSMR Alerts",
+        "description": "NIH MLSMR excluded functionality filters",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
+    "CHEMBL_SURECHEMBL": {
+        "name": "ChEMBL SureChEMBL Alerts",
+        "description": "SureChEMBL patent-derived structural alerts",
+        "pattern_count": "variable",
+        "severity": "warning",
+    },
     "ALL": {
         "name": "All Catalogs Combined",
         "description": "All available structural alert patterns",
@@ -115,6 +157,20 @@ def _build_catalog_params(catalog_type: str) -> FilterCatalogParams:
         params.AddCatalog(FilterCatalogParams.FilterCatalogs.NIH)
     elif catalog_type_upper == "ZINC":
         params.AddCatalog(FilterCatalogParams.FilterCatalogs.ZINC)
+    elif catalog_type_upper == "CHEMBL_BMS":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_BMS)
+    elif catalog_type_upper == "CHEMBL_DUNDEE":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_Dundee)
+    elif catalog_type_upper == "CHEMBL_GLAXO":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_Glaxo)
+    elif catalog_type_upper == "CHEMBL_INPHARMATICA":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_Inpharmatica)
+    elif catalog_type_upper == "CHEMBL_LINT":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_LINT)
+    elif catalog_type_upper == "CHEMBL_MLSMR":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_MLSMR)
+    elif catalog_type_upper == "CHEMBL_SURECHEMBL":
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_SureChEMBL)
     elif catalog_type_upper == "ALL":
         # Add all available catalogs
         params.AddCatalog(FilterCatalogParams.FilterCatalogs.PAINS_A)
@@ -123,6 +179,13 @@ def _build_catalog_params(catalog_type: str) -> FilterCatalogParams:
         params.AddCatalog(FilterCatalogParams.FilterCatalogs.BRENK)
         params.AddCatalog(FilterCatalogParams.FilterCatalogs.NIH)
         params.AddCatalog(FilterCatalogParams.FilterCatalogs.ZINC)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_BMS)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_Dundee)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_Glaxo)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_Inpharmatica)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_LINT)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_MLSMR)
+        params.AddCatalog(FilterCatalogParams.FilterCatalogs.CHEMBL_SureChEMBL)
     else:
         raise ValueError(
             f"Unknown catalog type: {catalog_type}. Available: {list(AVAILABLE_CATALOGS.keys())}"
@@ -131,7 +194,7 @@ def _build_catalog_params(catalog_type: str) -> FilterCatalogParams:
     return params
 
 
-@lru_cache(maxsize=8)
+@lru_cache(maxsize=16)
 def get_filter_catalog(catalog_type: str = "PAINS") -> CatalogInfo:
     """
     Get a cached FilterCatalog for the specified catalog type.

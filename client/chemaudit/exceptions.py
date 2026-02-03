@@ -1,17 +1,17 @@
 """
-ChemVault Client Exceptions
+ChemAudit Client Exceptions
 
-Custom exceptions for the ChemVault API client.
+Custom exceptions for the ChemAudit API client.
 """
 
 
-class ChemVaultError(Exception):
-    """Base exception for all ChemVault client errors."""
+class ChemAuditError(Exception):
+    """Base exception for all ChemAudit client errors."""
 
     pass
 
 
-class APIError(ChemVaultError):
+class APIError(ChemAuditError):
     """Raised when the API returns an error response."""
 
     def __init__(
@@ -47,7 +47,7 @@ class AuthenticationError(APIError):
         super().__init__(message, status_code=401)
 
 
-class ValidationError(ChemVaultError):
+class ValidationError(ChemAuditError):
     """Raised when request validation fails."""
 
     pass
@@ -61,7 +61,7 @@ class BatchJobNotFoundError(APIError):
         self.job_id = job_id
 
 
-class TimeoutError(ChemVaultError):
+class TimeoutError(ChemAuditError):
     """Raised when batch job times out."""
 
     pass

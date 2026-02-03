@@ -65,14 +65,22 @@ export function useMolecule(
   // CRITICAL: Track mol reference for cleanup (PITFALL 2)
   const molRef = useRef<RDKitMol | null>(null);
 
-  // Serialize highlightAtoms for dependency comparison
+  // Counter that increments when a new mol is created, triggering SVG re-render
+  const [molVersion, setMolVersion] = useState(0);
+
+  // Serialize highlightAtoms for stable dependency comparison
   const highlightAtomsKey = JSON.stringify(highlightAtoms);
 
+  // Effect 1: Create/destroy molecule when SMILES changes (async, shows loading)
   useEffect(() => {
-    // If no SMILES, clear state
     if (!smiles || smiles.trim() === '') {
+      if (molRef.current) {
+        molRef.current.delete();
+        molRef.current = null;
+      }
       setSvg(null);
       setError(null);
+      setMolVersion(0);
       return;
     }
 
@@ -102,46 +110,8 @@ export function useMolecule(
 
           // Store reference for cleanup
           molRef.current = mol;
-
-          // Generate SVG with optional CIP stereochemistry labels
-          let svgContent: string;
-
-          // Build drawing options for RDKit.js
-          const drawingOptions: Record<string, unknown> = {
-            width,
-            height,
-          };
-
-          // Add stereo annotation if showCIP is enabled
-          if (showCIP) {
-            drawingOptions.addStereoAnnotation = true;
-          }
-
-          if (highlightAtoms.length > 0) {
-            const highlightDetails = JSON.stringify({
-              atoms: highlightAtoms,
-              highlightColour: [1, 0.5, 0.5],
-              ...drawingOptions
-            });
-            svgContent = mol.get_svg_with_highlights(highlightDetails);
-          } else if (showCIP) {
-            // Try RDKit.js get_svg_with_highlights for CIP labels
-            try {
-              svgContent = mol.get_svg_with_highlights(JSON.stringify(drawingOptions));
-            } catch {
-              // Fallback to basic SVG if options not supported
-            }
-            svgContent ??= mol.get_svg(width, height);
-          } else {
-            svgContent = mol.get_svg(width, height);
-          }
-
-          // Post-process SVG to add padding by expanding viewBox
-          // This prevents molecules from being cut off at edges
-          svgContent = expandSvgViewBox(svgContent, 20);
-
-          setSvg(svgContent);
-          setError(null);
+          // Signal that a new mol is ready for SVG rendering
+          setMolVersion((v) => v + 1);
         } catch (e) {
           setError(e instanceof Error ? e.message : 'Unknown error');
           setSvg(null);
@@ -164,7 +134,50 @@ export function useMolecule(
         molRef.current = null;
       }
     };
-  }, [smiles, width, height, highlightAtoms, highlightAtomsKey, showCIP]);
+  }, [smiles]);
+
+  // Effect 2: Render SVG when mol is ready or rendering params change (sync, no loading flash)
+  useEffect(() => {
+    const mol = molRef.current;
+    if (!mol || molVersion === 0) return;
+
+    try {
+      let svgContent: string;
+
+      const drawingOptions: Record<string, unknown> = { width, height };
+      if (showCIP) {
+        drawingOptions.addStereoAnnotation = true;
+      }
+
+      if (highlightAtoms.length > 0) {
+        const highlightDetails = JSON.stringify({
+          atoms: highlightAtoms,
+          highlightColour: [1, 0.5, 0.5],
+          ...drawingOptions,
+        });
+        svgContent = mol.get_svg_with_highlights(highlightDetails);
+      } else if (showCIP) {
+        try {
+          svgContent = mol.get_svg_with_highlights(JSON.stringify(drawingOptions));
+        } catch {
+          // Fallback to basic SVG if options not supported
+        }
+        svgContent ??= mol.get_svg(width, height);
+      } else {
+        svgContent = mol.get_svg(width, height);
+      }
+
+      svgContent = expandSvgViewBox(svgContent, 20);
+
+      setSvg(svgContent);
+      setError(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Unknown error');
+      setSvg(null);
+    }
+    // Use highlightAtomsKey (stable string) instead of highlightAtoms (unstable reference)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [molVersion, width, height, highlightAtomsKey, showCIP]);
 
   return {
     svg,
