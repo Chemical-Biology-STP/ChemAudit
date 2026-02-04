@@ -66,6 +66,9 @@ app = FastAPI(
     title="ChemAudit API",
     description="Chemical Structure Validation and Standardization API",
     version=settings.APP_VERSION,
+    docs_url="/api/v1/docs",
+    redoc_url="/api/v1/redoc",
+    openapi_url="/api/v1/openapi.json",
     lifespan=lifespan,
 )
 

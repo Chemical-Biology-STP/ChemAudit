@@ -70,6 +70,12 @@ services:
       - RATE_LIMIT_BAN_THRESHOLD=${RATE_LIMIT_BAN_THRESHOLD:-100}
       - RATE_LIMIT_BAN_DURATION_MINUTES=${RATE_LIMIT_BAN_DURATION_MINUTES:-60}
       - CORS_ORIGINS_STR=${CORS_ORIGINS:?CORS_ORIGINS is required for production}
+      # External API Configuration
+      - COCONUT_API_TOKEN=${COCONUT_API_TOKEN:-}
+      - COCONUT_API_URL=${COCONUT_API_URL:-https://coconut.naturalproducts.net/api}
+      - PUBCHEM_API_URL=${PUBCHEM_API_URL:-https://pubchem.ncbi.nlm.nih.gov/rest/pug}
+      - CHEMBL_API_URL=${CHEMBL_API_URL:-https://www.ebi.ac.uk/chembl/api/data}
+      - EXTERNAL_API_TIMEOUT=${EXTERNAL_API_TIMEOUT:-30}
     deploy:
       resources:
         limits:
@@ -137,6 +143,12 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - MAX_BATCH_SIZE=${MAX_BATCH_SIZE:-10000}
       - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-500}
+      # External API Configuration
+      - COCONUT_API_TOKEN=${COCONUT_API_TOKEN:-}
+      - COCONUT_API_URL=${COCONUT_API_URL:-https://coconut.naturalproducts.net/api}
+      - PUBCHEM_API_URL=${PUBCHEM_API_URL:-https://pubchem.ncbi.nlm.nih.gov/rest/pug}
+      - CHEMBL_API_URL=${CHEMBL_API_URL:-https://www.ebi.ac.uk/chembl/api/data}
+      - EXTERNAL_API_TIMEOUT=${EXTERNAL_API_TIMEOUT:-30}
     deploy:
       resources:
         limits:
@@ -165,13 +177,10 @@ services:
       - "${HTTPS_PORT:-443}:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./nginx/locations.conf:/etc/nginx/conf.d/locations.conf:ro
-      - ./nginx/ssl-params.conf:/etc/nginx/conf.d/ssl-params.conf:ro
       - ./frontend-dist:/usr/share/nginx/html:ro
-      # Uncomment for SSL certificates
-      # - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - frontend
     healthcheck:
