@@ -114,7 +114,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Made with care by Kohulan.R at Friedrich Schiller University Jena · © ${new Date().getFullYear()} ChemAudit`,
+      copyright: `Made with ☕ by <a href="https://kohulanr.com" target="_blank" rel="noopener noreferrer">Kohulan.R</a> at <a href="http://cheminf.uni-jena.de/" target="_blank" rel="noopener noreferrer">Steinbeck Lab</a> · © ${new Date().getFullYear()} ChemAudit`,
     },
     prism: {
       theme: prismThemes.github,
