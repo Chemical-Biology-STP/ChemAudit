@@ -26,7 +26,7 @@
 
 ```bash
 # Clone and start
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # Create .env with required secrets
@@ -90,6 +90,6 @@ docker-compose up -d
 
 <div align="center">
 
-**Questions?** [Open an Issue](https://github.com/yourusername/chemaudit/issues)
+**Questions?** [Open an Issue](https://github.com/Kohulan/ChemAudit/issues)
 
 </div>

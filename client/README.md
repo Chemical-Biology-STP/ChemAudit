@@ -280,6 +280,6 @@ MIT License
 
 ## Links
 
-- **Documentation:** https://github.com/yourusername/chemaudit#readme
-- **Issue Tracker:** https://github.com/yourusername/chemaudit/issues
+- **Documentation:** https://github.com/Kohulan/ChemAudit#readme
+- **Issue Tracker:** https://github.com/Kohulan/ChemAudit/issues
 - **API Documentation:** http://localhost:8000/docs (when server is running)

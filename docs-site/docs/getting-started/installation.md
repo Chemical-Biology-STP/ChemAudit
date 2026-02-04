@@ -35,7 +35,7 @@ The fastest way to get started is with Docker Compose:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # Create environment file with required secrets

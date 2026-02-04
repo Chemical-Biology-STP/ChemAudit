@@ -238,7 +238,7 @@ docker stats --no-stream
 
 ### Report Issues
 
-[Open a GitHub Issue](https://github.com/yourusername/chemaudit/issues) with:
+[Open a GitHub Issue](https://github.com/Kohulan/ChemAudit/issues) with:
 - Description of the problem
 - Steps to reproduce
 - Debug information from above

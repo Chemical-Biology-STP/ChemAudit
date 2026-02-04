@@ -471,7 +471,7 @@ docker stats --no-stream
 
 ### Get Support
 
-1. **Search existing issues:** [GitHub Issues](https://github.com/yourusername/chemaudit/issues)
+1. **Search existing issues:** [GitHub Issues](https://github.com/Kohulan/ChemAudit/issues)
 2. **Create new issue** with:
    - Description of the problem
    - Steps to reproduce
@@ -482,6 +482,6 @@ docker stats --no-stream
 
 <div align="center">
 
-**Can't find your issue?** [Open a GitHub Issue](https://github.com/yourusername/chemaudit/issues/new)
+**Can't find your issue?** [Open a GitHub Issue](https://github.com/Kohulan/ChemAudit/issues/new)
 
 </div>

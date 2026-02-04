@@ -116,7 +116,7 @@ Cross-reference against major chemical databases
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # Start all services (development)

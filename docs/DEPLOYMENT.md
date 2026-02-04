@@ -164,7 +164,7 @@ For local testing of production build:
 
 ```bash
 # 1️⃣ Clone and enter directory
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # 2️⃣ Configure environment
@@ -616,6 +616,6 @@ For production at scale, consider:
 
 <div align="center">
 
-**Need help?** [Open an Issue](https://github.com/yourusername/chemaudit/issues)
+**Need help?** [Open an Issue](https://github.com/Kohulan/ChemAudit/issues)
 
 </div>

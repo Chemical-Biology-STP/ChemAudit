@@ -27,7 +27,7 @@ The fastest way to get started:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # Create a .env file with required secrets
@@ -268,6 +268,6 @@ Now that you've completed your first validation, explore more features:
 
 <div align="center">
 
-**Questions?** Check the [FAQ](TROUBLESHOOTING.md) or [Open an Issue](https://github.com/yourusername/chemaudit/issues)
+**Questions?** Check the [FAQ](TROUBLESHOOTING.md) or [Open an Issue](https://github.com/Kohulan/ChemAudit/issues)
 
 </div>

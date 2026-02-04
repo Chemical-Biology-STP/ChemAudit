@@ -68,7 +68,7 @@ Get ChemAudit running in minutes with Docker:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # Create environment file
@@ -107,4 +107,4 @@ Ready to get started? Here's where to go next:
 
 ## Support
 
-Questions or issues? [Open an issue on GitHub](https://github.com/yourusername/chemaudit/issues)
+Questions or issues? [Open an issue on GitHub](https://github.com/Kohulan/ChemAudit/issues)

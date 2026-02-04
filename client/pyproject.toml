@@ -33,9 +33,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/chemaudit"
-Documentation = "https://github.com/yourusername/chemaudit#readme"
-Repository = "https://github.com/yourusername/chemaudit"
+Homepage = "https://github.com/Kohulan/ChemAudit"
+Documentation = "https://github.com/Kohulan/ChemAudit#readme"
+Repository = "https://github.com/Kohulan/ChemAudit"
 
 [tool.hatch.build.targets.wheel]
 packages = ["chemaudit"]

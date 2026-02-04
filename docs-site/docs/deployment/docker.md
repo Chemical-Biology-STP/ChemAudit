@@ -34,7 +34,7 @@ ChemAudit's Docker deployment includes:
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/chemaudit.git
+git clone https://github.com/Kohulan/ChemAudit.git
 cd chemaudit
 
 # Create environment file
