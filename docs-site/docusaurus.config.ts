@@ -65,7 +65,7 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'ChemAudit',
+      title: '',
       logo: {
         alt: 'ChemAudit Logo',
         src: 'img/logo.png',
@@ -114,7 +114,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Made with ☕ by <a href="https://kohulanr.com" target="_blank" rel="noopener noreferrer">Kohulan.R</a> at <a href="http://cheminf.uni-jena.de/" target="_blank" rel="noopener noreferrer">Steinbeck Lab</a> · © ${new Date().getFullYear()} ChemAudit`,
+      copyright: `Made with ☕ by <a href="https://kohulanr.com" target="_blank" rel="noopener noreferrer">Kohulan.R</a> at <a href="http://cheminf.uni-jena.de/" target="_blank" rel="noopener noreferrer">Steinbeck Lab</a> · © ${new Date().getFullYear()} <a href="https://chemaudit.naturalproducts.net" target="_blank" rel="noopener noreferrer"><span style="color:#E53456;font-weight:800">Chem</span>Audit</a>`,
     },
     prism: {
       theme: prismThemes.github,

@@ -17,7 +17,9 @@ function HomepageHeader() {
           alt="ChemAudit Logo"
           className={styles.heroLogo}
         />
-        <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+        <h1 className={styles.heroTitle}>
+          <span className={styles.brandChem}>Chem</span>Audit
+        </h1>
         <p className={styles.heroTagline}>{siteConfig.tagline}</p>
         <p className={styles.heroSubtitle}>
           Validate, standardize, and assess ML-readiness of chemical structures with 40+ checks,
