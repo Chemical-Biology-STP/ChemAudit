@@ -114,7 +114,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} ChemAudit Project. Built with Docusaurus.`,
+      copyright: `Made with care by Kohulan.R at Friedrich Schiller University Jena · © ${new Date().getFullYear()} ChemAudit`,
     },
     prism: {
       theme: prismThemes.github,
