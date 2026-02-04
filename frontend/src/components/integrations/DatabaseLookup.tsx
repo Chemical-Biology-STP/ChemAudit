@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { integrationsApi } from '../../services/api';
 import type { PubChemResult, ChEMBLResult, COCONUTResult } from '../../types/integrations';
+const pubchemLogo = '/assets/logos/pubchem.png';
+const chemblLogo = '/assets/logos/chembl.png';
+const coconutLogo = '/assets/logos/coconut.png';
 
 interface DatabaseLookupProps {
   inchikey?: string;
@@ -94,7 +97,7 @@ function PubChemCard({ result }: { result: PubChemResult | null }) {
     return (
       <div className="border border-gray-200 rounded-lg p-4">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-lg">🔬</span>
+          <img src={pubchemLogo} alt="PubChem" className="w-5 h-5 rounded-sm object-contain" />
           <span className="font-medium text-gray-900">PubChem</span>
           <span className="text-xs text-gray-400">Failed to query</span>
         </div>
@@ -105,7 +108,7 @@ function PubChemCard({ result }: { result: PubChemResult | null }) {
   return (
     <div className={`border rounded-lg p-4 ${result.found ? 'border-blue-200 bg-blue-50' : 'border-gray-200'}`}>
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg">🔬</span>
+        <img src={pubchemLogo} alt="PubChem" className="w-5 h-5 rounded-sm object-contain" />
         <span className="font-medium text-gray-900">PubChem</span>
         {result.found ? (
           <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">Found</span>
@@ -170,7 +173,7 @@ function ChEMBLCard({ result }: { result: ChEMBLResult | null }) {
     return (
       <div className="border border-gray-200 rounded-lg p-4">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-lg">💊</span>
+          <img src={chemblLogo} alt="ChEMBL" className="w-5 h-5 rounded-sm object-contain" />
           <span className="font-medium text-gray-900">ChEMBL</span>
           <span className="text-xs text-gray-400">Failed to query</span>
         </div>
@@ -189,7 +192,7 @@ function ChEMBLCard({ result }: { result: ChEMBLResult | null }) {
   return (
     <div className={`border rounded-lg p-4 ${result.found ? 'border-purple-200 bg-purple-50' : 'border-gray-200'}`}>
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg">💊</span>
+        <img src={chemblLogo} alt="ChEMBL" className="w-5 h-5 rounded-sm object-contain" />
         <span className="font-medium text-gray-900">ChEMBL</span>
         {result.found ? (
           <span className="px-2 py-0.5 bg-purple-100 text-purple-800 text-xs rounded-full">Found</span>
@@ -270,7 +273,7 @@ function COCONUTCard({ result }: { result: COCONUTResult | null }) {
     return (
       <div className="border border-gray-200 rounded-lg p-4">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-lg">🌿</span>
+          <img src={coconutLogo} alt="COCONUT" className="w-5 h-5 rounded-sm object-contain" />
           <span className="font-medium text-gray-900">COCONUT</span>
           <span className="text-xs text-gray-400">Failed to query</span>
         </div>
@@ -281,7 +284,7 @@ function COCONUTCard({ result }: { result: COCONUTResult | null }) {
   return (
     <div className={`border rounded-lg p-4 ${result.found ? 'border-amber-200 bg-amber-50' : 'border-gray-200'}`}>
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg">🌿</span>
+        <img src={coconutLogo} alt="COCONUT" className="w-5 h-5 rounded-sm object-contain" />
         <span className="font-medium text-gray-900">COCONUT</span>
         {result.found ? (
           <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs rounded-full">Natural Product</span>
