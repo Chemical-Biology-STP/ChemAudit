@@ -108,3 +108,19 @@ nav.menu .menu__link:hover {
 [data-theme='dark'] .navbar {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+/* Branded "ChemAudit" navbar title with crimson "Chem" */
+.navbar__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.navbar__title::before {
+  content: 'Chem';
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+}
+
+.navbar__title::after {
+  content: 'Audit';
+}

@@ -30,6 +30,15 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  color: var(--ifm-color-emphasis-900);
+}
+
+[data-theme='dark'] .heroTitle {
+  color: var(--ifm-color-emphasis-800);
+}
+
+.brandChem {
+  font-weight: 800;
   color: var(--ifm-color-primary);
 }
 
