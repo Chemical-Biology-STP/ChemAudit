@@ -144,22 +144,33 @@ nav.menu .menu__link:hover {
 
 /* ========== Footer Layout ========== */
 .footer {
-  text-align: center;
+  padding: 2rem 0;
+}
+
+.footer .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .footer__links {
   display: flex;
-  justify-content: center;
-  gap: 4rem;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
 }
 
-.footer__col {
-  text-align: center;
+.footer__col:first-child {
+  text-align: left;
+}
+
+.footer__col:last-child {
+  text-align: right;
 }
 
 .footer__title {
   margin-bottom: 0.75rem;
+  font-weight: 600;
 }
 
 .footer__items {
@@ -173,7 +184,7 @@ nav.menu .menu__link:hover {
 }
 
 .footer__copyright {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  text-align: center;
+  padding-top: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
