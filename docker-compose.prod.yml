@@ -47,6 +47,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
       args:
+        - NO_PROXY=localhost,127.0.0.1
         - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
     container_name: chemaudit-backend-prod
     restart: unless-stopped
