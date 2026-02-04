@@ -54,6 +54,9 @@ yarn-error.log*
 dist/
 .cache/
 
+# Frontend build output (generated, not committed)
+frontend-dist/
+
 # Environment files
 .env
 .env.local
