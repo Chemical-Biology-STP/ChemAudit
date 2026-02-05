@@ -24,7 +24,7 @@
 
 [Features](#-features) •
 [Quick Start](#-quick-start) •
-[Documentation](#-documentation) •
+[Documentation](https://www.kohulanr.com/ChemAudit/) •
 [API](#-api-reference) •
 [Contributing](#-contributing)
 
