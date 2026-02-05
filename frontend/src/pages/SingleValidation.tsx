@@ -439,7 +439,17 @@ export function SingleValidationPage() {
                 <h4 className="font-semibold text-[var(--color-text-primary)] text-sm tracking-tight">
                   Input Structure
                 </h4>
-                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">SMILES, InChI, or draw</p>
+                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                  SMILES, InChI, or{' '}
+                  <a
+                    href="https://app.naturalproducts.net/depict/structuredraw"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--color-primary)] hover:underline"
+                  >
+                    draw a structure here
+                  </a>
+                </p>
               </div>
             </div>
             <StructureInput value={molecule} onChange={setMolecule} onSubmit={handleValidate} />

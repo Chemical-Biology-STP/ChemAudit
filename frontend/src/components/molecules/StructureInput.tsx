@@ -22,7 +22,7 @@ export function StructureInput({
   onChange,
   onSubmit,
   disabled = false,
-  placeholder = 'Enter SMILES, InChI, or paste MOL block...',
+  placeholder = 'Enter SMILES, InChI, or paste MDL Mol file...',
 }: StructureInputProps): ReactElement {
   useHotkeys(
     'ctrl+enter, meta+enter',
