@@ -5,6 +5,11 @@
 ### Chemical Structure Validation & Quality Assessment Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Release](https://img.shields.io/github/v/release/Kohulan/ChemAudit)](https://github.com/Kohulan/ChemAudit/releases)
+[![Tests](https://github.com/Kohulan/ChemAudit/actions/workflows/test.yml/badge.svg)](https://github.com/Kohulan/ChemAudit/actions/workflows/test.yml)
+[![Documentation](https://img.shields.io/badge/docs-available-brightgreen.svg)](https://kohulan.github.io/ChemAudit/)
+[![Contributors](https://img.shields.io/github/contributors/Kohulan/ChemAudit)](https://github.com/Kohulan/ChemAudit/graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/Kohulan/ChemAudit)](https://github.com/Kohulan/ChemAudit/issues)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![React 18](https://img.shields.io/badge/react-18-61DAFB.svg?logo=react)](https://reactjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
