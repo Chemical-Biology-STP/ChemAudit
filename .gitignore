@@ -84,3 +84,17 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Pixi
+.pixi/
+pixi.lock
+
+# Generated SLURM scripts
+scripts/submit_*.sh
+scripts/run_orca_multi.sh
+
+# Results output
+results/
+
+# Example data files
+examples/

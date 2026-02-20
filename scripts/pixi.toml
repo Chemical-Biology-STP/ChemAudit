@@ -1,0 +1,17 @@
+[project]
+name = "chemaudit-standardization"
+version = "0.1.0"
+description = "ChemAudit standardization pipeline dependencies"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = ">=3.11"
+rdkit = ">=2024.03"
+pandas = ">=2.2"
+
+[pypi-dependencies]
+chembl-structure-pipeline = ">=1.0.0"
+molvs = ">=0.1.1"
+pydantic = ">=2.8.0"
+pydantic-settings = ">=2.0.0"
