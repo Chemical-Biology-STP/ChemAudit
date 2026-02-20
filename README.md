@@ -350,6 +350,10 @@ chemaudit/
 │   │   ├── hooks/            # Custom hooks
 │   │   └── types/            # TypeScript definitions
 │   └── tests/
+├── scripts/
+│   ├── generate_slurm.sh    # Interactive SLURM generator
+│   ├── run_standardization.py # CLI standardization pipeline
+│   └── pixi.toml            # Pixi dependency manifest
 ├── nginx/                    # Reverse proxy config
 ├── docs/                     # Documentation
 └── docker-compose.yml
@@ -372,6 +376,90 @@ npm test
 poetry run pytest --cov=app
 npm run test:coverage
 ```
+
+---
+
+## 🧹 CLI Standardization (HPC / Local)
+
+Run the ChEMBL standardization pipeline directly on CSV or SDF files without the web server. Designed for HPC clusters with SLURM but works locally too.
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `scripts/run_standardization.py` | Standalone standardization script |
+| `scripts/generate_slurm.sh` | Interactive SLURM job generator |
+| `scripts/pixi.toml` | Conda/PyPI dependency manifest |
+
+### Local Usage
+
+```bash
+# Install dependencies with pixi (https://pixi.sh)
+pixi install --manifest-path scripts/pixi.toml
+
+# Single CSV file
+pixi run --manifest-path scripts/pixi.toml \
+    python scripts/run_standardization.py \
+    --input data/molecules.csv \
+    --output results/standardized.csv
+
+# Single SDF file
+pixi run --manifest-path scripts/pixi.toml \
+    python scripts/run_standardization.py \
+    --input data/molecules.sdf \
+    --output results/standardized.csv
+
+# Folder of CSV/SDF files (each gets its own output)
+pixi run --manifest-path scripts/pixi.toml \
+    python scripts/run_standardization.py \
+    --input data/molecules/ \
+    --output results/
+```
+
+When given a folder, each input file produces its own output pair:
+- `mols_A.csv` → `results/mols_A_standardized.csv` + `results/mols_A_failed.csv`
+- `mols_B.sdf` → `results/mols_B_standardized.csv` + `results/mols_B_failed.csv`
+
+Failed molecule files are only created when there are actual failures.
+
+### Options
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--input` | *(required)* | CSV/SDF file or folder |
+| `--output` | *(required)* | Output file (single) or directory (folder) |
+| `--smiles-col` | `SMILES` | Default SMILES column for CSVs |
+| `--id-col` | `RegistrationNo` | Default ID column for CSVs |
+| `--column-map` | — | Per-file column mapping as JSON (see below) |
+| `--include-tautomer` | off | Enable tautomer canonicalization (may lose E/Z stereo) |
+
+#### Per-file column mapping
+
+When processing multiple CSVs with different column names, pass a JSON map:
+
+```bash
+--column-map '{"file_A.csv": {"smiles": "CANONICAL_SMILES", "id": "COMPOUND_ID"}, "file_B.csv": {"smiles": "smi", "id": "name"}}'
+```
+
+### HPC / SLURM Usage
+
+The interactive generator handles everything — dependency setup, partition/node selection, and column mapping:
+
+```bash
+# Load pixi on the cluster
+module load pixi/0.56.0
+
+# Run the interactive generator
+bash scripts/generate_slurm.sh
+```
+
+The generator will:
+1. Ask for input file/folder (with Tab completion)
+2. Detect CSV column headers and let you pick SMILES/ID columns per file
+3. Query SLURM for available nodes and free resources
+4. Let you choose a partition and node (or let SLURM decide)
+5. Auto-calculate memory from the selected node
+6. Write a ready-to-submit SLURM script and offer to `sbatch` it
 
 ---
 
